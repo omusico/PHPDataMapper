@@ -2,6 +2,7 @@ function ShowLoadingListOfDataBases(){
 	document.getElementById('ListOfDataBasesLoader').style.display = '';
 	document.getElementById('ListOfDatabaseNamesContainer').style.display = 'none';
 }
+
 function HideLoadingListOfDataBases(){
 	document.getElementById('ListOfDataBasesLoader').style.display = 'none';
 	document.getElementById('ListOfDatabaseNamesContainer').style.display = '';
@@ -11,9 +12,26 @@ function ShowLoadingDataBaseInfo(){
 	document.getElementById('DataBaseInfoLoader').style.display = '';
 	document.getElementById('DBTableInfoContainer').style.display = 'none';
 }
+
 function HideLoadingDataBaseInfo(){
 	document.getElementById('DataBaseInfoLoader').style.display = 'none';
 	document.getElementById('DBTableInfoContainer').style.display = '';
+}
+
+function ShowLoadingPrepareFile(){
+	document.getElementById('PrepareFileLoader').style.display = '';
+}
+
+function HideLoadingPrepareFile(){
+	document.getElementById('PrepareFileLoader').style.display = 'none';
+}
+
+function ShowPrepareFileGreenTick(){
+	document.getElementById('GreenTickFileLoader').style.display = '';
+}
+
+function HidePrepareFileGreenTick(){
+	document.getElementById('GreenTickFileLoader').style.display = 'none';
 }
 
 function RetrieveListOfDataBases(){
@@ -43,8 +61,6 @@ function RetrieveListOfDataBases(){
 		  document.getElementById('ListOfDatabaseNamesContainer').style.display = '';
 		  HideLoadingListOfDataBases();
 	});
-	
-	
 }
 
 function RetrieveDataBaseInformation(){
@@ -107,6 +123,30 @@ function RetrieveDataBaseInformation(){
 			}
 			
 			
+	});
+}
+
+function PrepareInputFileForForm(){
+	$.ajax({
+		  type: "POST",
+		  asynch: false,
+		  url: "AjaxFileService/ajaxFileService.php",
+		  data: { 	
+		  			filename: document.getElementById("InputFileNameDir").value,
+		  			filetype: document.getElementById("InputFileExt").value
+		   		}
+		}).done(function( msg ) {
+		  	var result = msg.split(";");
+
+		  	var successOrFail = result[0];
+
+		  	if(successOrFail == "SUCCESS"){
+			  	document.getElementById("FirstRowFromFile").value = result[1];
+			}else{
+				alert(result[1]);
+			}
+			HideLoadingPrepareFile();
+			ShowPrepareFileGreenTick();
 	});
 }
 

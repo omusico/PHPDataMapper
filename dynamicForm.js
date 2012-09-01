@@ -22,7 +22,6 @@ function showOptions(dropdown){
 		document.getElementById('ShowCustomEval_'+guid).style.display = '';
 	}
 }
-
 function showOptionsManyToOne(dropdown, number){
 	var guid = dropdown.name.split('_')[2];
 
@@ -148,7 +147,6 @@ function DeleteFromGuidList(guid){
 	}
 	 document.getElementById('guidList').value = finalValue;
 }
-
 function SelectOutput(dropdownlist){
 	if(dropdownlist.value == "ToOutputDataFile"){
 		document.getElementById('outputdatafileform').style.display = '';
@@ -161,7 +159,6 @@ function SelectOutput(dropdownlist){
 		document.getElementById('outputdatabaseform').style.display = '';
 	}
 }
-
 function getPrimaryForeignRelationshipHTML(){
 	var mappingDestination = document.getElementById("MappingType").value;
 	var databaseTableInformation = document.getElementById("TableInformation").value;
@@ -282,7 +279,6 @@ function getPrimaryForeignRelationshipHTML(){
 
 	document.getElementById("mappings").appendChild(table);
 }
-
 function MultiValueXMLHasChildren(guid){
 	var container = document.getElementById('xmlSplitCharContainer_'+guid);
 	var hasChildren = document.getElementById('inputHasChildren_'+guid).value;
@@ -304,7 +300,6 @@ function MultiValueXMLHasChildren(guid){
 		container.appendChild(srcCharSplitInput);
 	}
 }
-
 function getMultiValuedHTML(){
 	var mappingDestination = document.getElementById("MappingType").value;
 	var databaseTableInformation = document.getElementById("TableInformation").value;
@@ -455,7 +450,6 @@ function getMultiValuedHTML(){
 
 	document.getElementById("mappings").appendChild(table);
 }
-
 function getOneToOneMappingHTML(){
 	var guid = guidGenerator();
 	var databaseTableInformation = document.getElementById("TableInformation").value;
@@ -483,19 +477,21 @@ function getOneToOneMappingHTML(){
 	}
 
 	//Interpret the table information and construct HTML controls
-	for(var p=0; p<topLevel.length; p++){
-		var tableName = topLevel[p].split(';')[0];
-		var currColInfo = topLevel[p].split(';')[1].split(',');
-		for(var q=0; q<currColInfo.length; q++){
-			var colName = currColInfo[q].split(':')[0];
-			var isPrimary = currColInfo[q].split(':')[1];
+	if(mappingDestination == "ToDataBase"){
+		for(var p=0; p<topLevel.length; p++){
+			var tableName = topLevel[p].split(';')[0];
+			var currColInfo = topLevel[p].split(';')[1].split(',');
+			for(var q=0; q<currColInfo.length; q++){
+				var colName = currColInfo[q].split(':')[0];
+				var isPrimary = currColInfo[q].split(':')[1];
 
-			if(isPrimary == "0"){
-				var currCol = document.createElement('option');
-    			currCol.setAttribute('value', tableName+"->"+colName);
-    			currCol.innerHTML = tableName+"->"+colName;
-    			dataBaseDestDropDown.appendChild(currCol);
-    		}
+				if(isPrimary == "0"){
+					var currCol = document.createElement('option');
+	    			currCol.setAttribute('value', tableName+"->"+colName);
+	    			currCol.innerHTML = tableName+"->"+colName;
+	    			dataBaseDestDropDown.appendChild(currCol);
+	    		}
+			}
 		}
 	}
 
@@ -560,6 +556,7 @@ function getOneToOneMappingHTML(){
 	inputColNumInput.setAttribute('name', 'inputColumnNumber_'+guid);
 	inputColNumInput.setAttribute('size', '3');
 	inputColNumInput.setAttribute('type', 'text');
+	inputColNumInput.setAttribute('onkeyup','document.getElementById("DisplayValue_'+guid+'").innerHTML = getColumnValueFromFirstRowOfFile(this.value);');
 
 	var inputInputFunction = document.createElement('select');
 	inputInputFunction.setAttribute('id', 'inputFunction_'+guid);
@@ -673,12 +670,29 @@ function getOneToOneMappingHTML(){
 
 	var linebreak = document.createElement('br');
 
+	//setup a table for dynamic data file column values
+	var colNumAndValTable = document.createElement("table");
+	colNumAndValTable.setAttribute("border","0");
+	var ValTableRow = document.createElement("tr");
+	var valTableCell1 = document.createElement("td");
+	var valTableCell2 = document.createElement("td");
+	//setup a div 
+	var valDiv = document.createElement("div");
+	valDiv.setAttribute("id", "DisplayValue_"+guid);
+	valDiv.setAttribute("name", "DisplayValue_"+guid);
+	valDiv.setAttribute("style","color:red;");
+
 	//compose the HTML document elements using appendChild.
 	table.appendChild(row1);
 		row1.appendChild(cell1);
 			cell1.appendChild(inputColNumDiv);
-			cell1.appendChild(inputColNumInput);
-			cell1.appendChild(linebreak);
+
+			cell1.appendChild(colNumAndValTable);
+				colNumAndValTable.appendChild(ValTableRow);
+					ValTableRow.appendChild(valTableCell1);
+						valTableCell1.appendChild(inputColNumInput);
+					ValTableRow.appendChild(valTableCell2);
+						valTableCell2.appendChild(valDiv);
 			cell1.appendChild(inputInputFunction);
 				inputInputFunction.appendChild(inputFunctionOpt1);
 				inputInputFunction.appendChild(inputFunctionOpt2);
@@ -726,7 +740,6 @@ function getOneToOneMappingHTML(){
 
 	document.getElementById("mappings").appendChild(table);
 }
-
 function getManyToOneMappingHTML(){
 	var guid = guidGenerator();
 	var databaseTableInformation = document.getElementById("TableInformation").value;
@@ -752,19 +765,21 @@ function getManyToOneMappingHTML(){
 	}
 
 	//Interpret the table information and construct HTML controls
-	for(var p=0; p<topLevel.length; p++){
-		var tableName = topLevel[p].split(';')[0];
-		var currColInfo = topLevel[p].split(';')[1].split(',');
-		for(var q=0; q<currColInfo.length; q++){
-			var colName = currColInfo[q].split(':')[0];
-			var isPrimary = currColInfo[q].split(':')[1];
+	if(mappingDestination == "ToDataBase"){
+		for(var p=0; p<topLevel.length; p++){
+			var tableName = topLevel[p].split(';')[0];
+			var currColInfo = topLevel[p].split(';')[1].split(',');
+			for(var q=0; q<currColInfo.length; q++){
+				var colName = currColInfo[q].split(':')[0];
+				var isPrimary = currColInfo[q].split(':')[1];
 
-			if(isPrimary == "0"){
-				var currCol = document.createElement('option');
-    			currCol.setAttribute('value', tableName+"->"+colName);
-    			currCol.innerHTML = tableName+"->"+colName;
-    			dataBaseDestDropDown.appendChild(currCol);
-    		}
+				if(isPrimary == "0"){
+					var currCol = document.createElement('option');
+	    			currCol.setAttribute('value', tableName+"->"+colName);
+	    			currCol.innerHTML = tableName+"->"+colName;
+	    			dataBaseDestDropDown.appendChild(currCol);
+	    		}
+			}
 		}
 	}
 
@@ -840,6 +855,7 @@ function getManyToOneMappingHTML(){
 	inputColNumInput.setAttribute('name', 'inputColumnNumber_1_'+guid);
 	inputColNumInput.setAttribute('size', '3');
 	inputColNumInput.setAttribute('type', 'text');
+	inputColNumInput.setAttribute('onkeyup','document.getElementById("DisplayValue_1_'+guid+'").innerHTML = getColumnValueFromFirstRowOfFile(this.value);');
 
 	var inputInputFunction = document.createElement('select');
 	inputInputFunction.setAttribute('id', 'inputFunction_1_'+guid);
@@ -966,15 +982,31 @@ function getManyToOneMappingHTML(){
 
 	var linebreak = document.createElement('br');
 
+	//setup a table for dynamic data file column values
+	var colNumAndValTable = document.createElement("table");
+	colNumAndValTable.setAttribute("border","0");
+	var ValTableRow = document.createElement("tr");
+	var valTableCell1 = document.createElement("td");
+	var valTableCell2 = document.createElement("td");
+	//setup a div 
+	var valDiv = document.createElement("div");
+	valDiv.setAttribute("id", "DisplayValue_1_"+guid);
+	valDiv.setAttribute("name", "DisplayValue_1_"+guid);
+	valDiv.setAttribute("style","color:red;");
+
 	//compose the HTML document elements using appendChild.
 	table.appendChild(row1);
 		row1.appendChild(cell1);
 			cell1.appendChild(listOfMappingsDiv)
 				listOfMappingsDiv.appendChild(numMappingsInput)
 				listOfMappingsDiv.appendChild(mappingNumber)
-				listOfMappingsDiv.appendChild(inputColNumDiv);
-				listOfMappingsDiv.appendChild(inputColNumInput);
-				listOfMappingsDiv.appendChild(linebreak);
+
+				listOfMappingsDiv.appendChild(colNumAndValTable);
+					colNumAndValTable.appendChild(ValTableRow);
+						ValTableRow.appendChild(valTableCell1);
+							valTableCell1.appendChild(inputColNumInput);
+						ValTableRow.appendChild(valTableCell2);
+							valTableCell2.appendChild(valDiv);
 				listOfMappingsDiv.appendChild(inputInputFunction);
 					inputInputFunction.appendChild(inputFunctionOpt1);
 					inputInputFunction.appendChild(inputFunctionOpt2);
@@ -1030,7 +1062,6 @@ function getManyToOneMappingHTML(){
 
 	document.getElementById("AddAnotherLink_"+guid).innerHTML = "<a href='javascript:void(0);' onclick='javascript:AddMapping(\""+guid+"\","+ currentNumberMappings +");'><img border='0' src='images/addanother.png' /></a>";
 }
-
 function AddMapping(guid, numMappings){
 	var mappingsList = document.getElementById("ListOfMappings_"+guid);
 
@@ -1051,6 +1082,7 @@ function AddMapping(guid, numMappings){
 	inputColNumInput.setAttribute('name', 'inputColumnNumber_'+(currentNumberMappings+1)+'_'+guid);
 	inputColNumInput.setAttribute('size', '3');
 	inputColNumInput.setAttribute('type', 'text');
+	inputColNumInput.setAttribute('onkeyup','document.getElementById("DisplayValue_'+(currentNumberMappings+1)+'_'+guid+'").innerHTML = getColumnValueFromFirstRowOfFile(this.value);');
 
 	var inputInputFunction = document.createElement('select');
 	inputInputFunction.setAttribute('id', 'inputFunction_'+(currentNumberMappings+1)+'_'+guid);
@@ -1130,10 +1162,27 @@ function AddMapping(guid, numMappings){
 
 	var linebreak = document.createElement('br');
 
+	//setup a table for dynamic data file column values
+	var colNumAndValTable = document.createElement("table");
+	colNumAndValTable.setAttribute("border","0");
+	var ValTableRow = document.createElement("tr");
+	var valTableCell1 = document.createElement("td");
+	var valTableCell2 = document.createElement("td");
+	//setup a div 
+	var valDiv = document.createElement("div");
+	valDiv.setAttribute("id", 'DisplayValue_'+(currentNumberMappings+1)+'_'+guid);
+	valDiv.setAttribute("name", 'DisplayValue_'+(currentNumberMappings+1)+'_'+guid);
+	valDiv.setAttribute("style","color:red;");
+
 	listOfMappingsDiv.appendChild(mappingNumber);
 	listOfMappingsDiv.appendChild(inputColNumDiv);
-	listOfMappingsDiv.appendChild(inputColNumInput);
-	listOfMappingsDiv.appendChild(linebreak);
+
+	listOfMappingsDiv.appendChild(colNumAndValTable);
+		colNumAndValTable.appendChild(ValTableRow);
+			ValTableRow.appendChild(valTableCell1);
+				valTableCell1.appendChild(inputColNumInput);
+			ValTableRow.appendChild(valTableCell2);
+				valTableCell2.appendChild(valDiv);
 	listOfMappingsDiv.appendChild(inputInputFunction);
 		inputInputFunction.appendChild(inputFunctionOpt1);
 		inputInputFunction.appendChild(inputFunctionOpt2);
@@ -1155,10 +1204,26 @@ function AddMapping(guid, numMappings){
 				
 	mappingsList.appendChild(listOfMappingsDiv);
 }
-
 function guidGenerator() {
     var S4 = function() {
        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
     };
     return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+}
+function getColumnValueFromFirstRowOfFile(columnNumber){
+	columnNumber = parseInt(columnNumber);
+	var firstRow = document.getElementById("FirstRowFromFile").value;
+	var values = firstRow.split(",");
+	var colCount = values.length;
+
+
+	if((isNaN(columnNumber)) || ((columnNumber+1) > colCount)){
+		return "";
+	}
+
+	//a comma seperated string that represents the first row
+	var firstRow = document.getElementById("FirstRowFromFile").value;
+	var values = firstRow.split(",");
+
+	return values[columnNumber];
 }

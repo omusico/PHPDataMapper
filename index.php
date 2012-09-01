@@ -14,15 +14,36 @@
 <form action='parseForm.php' method='POST'>
 <table>
     <tr>
-        <td>Input directory / file name:</td><td><input id='InputFileNameDir' name='InputFileNameDir' type='text' value=''></input></td>
-        <td>
-            extension type
-            <select id='InputFileExt' name='InputFileExt'>
-                <option value='txt'>*.txt</option>
-                <option value='csv'>*.csv</option>
-                <option value='xml'>*.xml</option>
-                <option value='xls'>*.xls</option>
-            </select>
+        <td valign='top'>Input directory / file name:</td>
+        <td valign='top'>
+            <input id='InputFileNameDir' name='InputFileNameDir' type='text' value=''></input><br/>
+        </td>
+        <td valign='top'>
+            <table>
+                <tr>
+                    <td>
+                        extension type
+                        <select id='InputFileExt' name='InputFileExt'>
+                            <option value='txt'>*.txt</option>
+                            <option value='csv'>*.csv</option>
+                            <option value='xml'>*.xml</option>
+                            <option value='xls'>*.xls</option>
+                        </select>
+                    </td>
+                    <td>
+                        <a href='javascript:void(0);' onclick='HidePrepareFileGreenTick();ShowLoadingPrepareFile();PrepareInputFileForForm();'>Load file</a>
+                    </td>
+                    <td>
+                        <input id='FirstRowFromFile' name='FirstRowFromFile' type='hidden' value=''></input>
+                        <div id='PrepareFileLoader' name='PrepareFileLoader' style='display:none;'>
+                            <img src='images/loader.gif' >
+                        </div>
+                        <div id='GreenTickFileLoader' name='GreenTickFileLoader' style='display:none;'>
+                            <img src='images/tick.png' >
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
     <tr>

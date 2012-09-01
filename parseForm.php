@@ -8,6 +8,7 @@
 </head>
 <body>
 <?php
+try{
     include "Mapping/MappingProcessor.php";
     include "Mapping/MappingProcessorDataStructure.php";
     include "Mapping/MappingProcessorDataBase.php";
@@ -533,6 +534,12 @@
     }else if($outputType == "ToDataStructure"){
         $dataStructureProcessor->Normalise($dataStructureProcessor->outputDataStructure);
     }
+
+    echo "Processing complete. <a href='index.php'>Click here to process another file</a>";
+
+}catch(Exception $e){
+	throw new Exception("Error processing.");
+}
 ?>
 </body>
 </html>
