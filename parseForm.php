@@ -32,7 +32,8 @@
                                                                 $_POST["inputFunction_".$values[0]],
                                                                 $_POST["inputCharNum_".$values[0]],
                                                                 $_POST["inputSubStart_".$values[0]],
-                                                                $_POST["inputSubEnd_".$values[0]]);
+                                                                $_POST["inputSubEnd_".$values[0]],
+                                                                $_POST["inputCustomEval_".$values[0]]);
 
                             
                                  
@@ -55,7 +56,8 @@
                                                                 $_POST["inputFunction_".($r+1)."_".$values[0]],
                                                                 $_POST["inputCharNum_".($r+1)."_".$values[0]],
                                                                 $_POST["inputSubStart_".($r+1)."_".$values[0]],
-                                                                $_POST["inputSubEnd_".($r+1)."_".$values[0]]
+                                                                $_POST["inputSubEnd_".($r+1)."_".$values[0]],
+                                                                $_POST["inputCustomEval_".($r+1)."_".$values[0]]
                                                             ); 
                     $mapping->ProcessColumns[$r] = $pc;
                 }

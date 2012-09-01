@@ -4,14 +4,22 @@ function showOptions(dropdown){
 	if(dropdown[dropdown.selectedIndex].value == 'char'){
 		document.getElementById('ShowCharacterOption_'+guid).style.display = '';
 		document.getElementById('ShowSubStringOption_'+guid).style.display = 'none';
+		document.getElementById('ShowCustomEval_'+guid).style.display = 'none';
 
 	}else if(dropdown[dropdown.selectedIndex].value == 'substr'){
 		document.getElementById('ShowCharacterOption_'+guid).style.display = 'none';
 		document.getElementById('ShowSubStringOption_'+guid).style.display = '';
+		document.getElementById('ShowCustomEval_'+guid).style.display = 'none';
 		
 	}else if(dropdown[dropdown.selectedIndex].value == 'direct'){
 		document.getElementById('ShowCharacterOption_'+guid).style.display = 'none';
 		document.getElementById('ShowSubStringOption_'+guid).style.display = 'none';
+		document.getElementById('ShowCustomEval_'+guid).style.display = 'none';
+		
+	}else if(dropdown[dropdown.selectedIndex].value == 'eval'){
+		document.getElementById('ShowCharacterOption_'+guid).style.display = 'none';
+		document.getElementById('ShowSubStringOption_'+guid).style.display = 'none';
+		document.getElementById('ShowCustomEval_'+guid).style.display = '';
 		
 	}
 }
@@ -22,14 +30,19 @@ function showOptionsManyToOne(dropdown, number){
 	if(dropdown[dropdown.selectedIndex].value == 'char'){
 		document.getElementById('ShowCharacterOption_'+number+'_'+guid).style.display = '';
 		document.getElementById('ShowSubStringOption_'+number+'_'+guid).style.display = 'none';
-
+		document.getElementById('ShowCustomEval_'+number+'_'+guid).style.display = 'none';
 	}else if(dropdown[dropdown.selectedIndex].value == 'substr'){
 		document.getElementById('ShowCharacterOption_'+number+'_'+guid).style.display = 'none';
 		document.getElementById('ShowSubStringOption_'+number+'_'+guid).style.display = '';
-		
+		document.getElementById('ShowCustomEval_'+number+'_'+guid).style.display = 'none';
 	}else if(dropdown[dropdown.selectedIndex].value == 'direct'){
 		document.getElementById('ShowCharacterOption_'+number+'_'+guid).style.display = 'none';
 		document.getElementById('ShowSubStringOption_'+number+'_'+guid).style.display = 'none';
+		document.getElementById('ShowCustomEval_'+number+'_'+guid).style.display = 'none';
+	}else if(dropdown[dropdown.selectedIndex].value == 'eval'){
+		document.getElementById('ShowCharacterOption_'+number+'_'+guid).style.display = 'none';
+		document.getElementById('ShowSubStringOption_'+number+'_'+guid).style.display = 'none';
+		document.getElementById('ShowCustomEval_'+number+'_'+guid).style.display = '';
 		
 	}
 }
@@ -121,6 +134,7 @@ function getOneToOneMappingHTML(){
 								"<option value='char'>character</option>"+
 								"<option value='substr'>sub string</option>"+
 								"<option value='direct'>direct copy</option>"+
+								"<option value='eval'>custom evaluation</option>"+
 							"</select><br/>"+
 							"<div id='ShowCharacterOption_"+guid+"' style='display:none;'>"+
 							"character <input type='text' id='inputCharNum_"+guid+"' name='inputCharNum_"+guid+"'></input><br/>"+
@@ -129,6 +143,10 @@ function getOneToOneMappingHTML(){
 							"substring<br/>"+
 							"start <input type='text' id='inputSubStart_"+guid+"' name='inputSubStart_"+guid+"'></input><br/>"+
 							"end <input type='text' id='inputSubEnd_"+guid+"' name='inputSubEnd_"+guid+"'></input>"+
+							"</div>"+
+							"<div id='ShowCustomEval_"+guid+"' style='display:none;'>"+
+							"Use the variable '#ColValue' in place of column value.<br/>"+
+							"<textarea cols='35' rows='10' id='inputCustomEval_"+guid+"' name='inputCustomEval_"+guid+"'> </textarea>"+
 							"</div>"+
 						"</td>"+
 						"<td>-------></td>"+
@@ -161,6 +179,7 @@ function getManyToOneMappingHTML(){
 								"<option value='char'>character</option>"+
 								"<option value='substr'>sub string</option>"+
 								"<option value='direct'>direct copy</option>"+
+								"<option value='eval'>custom evaluation</option>"+
 							"</select><br/>"+
 
 							"<div id='ShowCharacterOption_1_"+guid+"' style='display:none;'>"+
@@ -172,6 +191,11 @@ function getManyToOneMappingHTML(){
 								"end <input type='text' id='inputSubEnd_1_"+guid+"' name='inputSubEnd_1_"+guid+"'></input>"+
 							"</div>"+
 							
+							"<div id='ShowCustomEval_1_"+guid+"' style='display:none;'>"+
+								"Use the variable '#ColValue' in place of column value.<br/>"+
+								"<textarea cols='35' rows='10' id='inputCustomEval_1_"+guid+"' name='inputCustomEval_1_"+guid+"'> </textarea>"+
+							"</div>"+
+
 							"</div>"+
 							"<div id='AddAnotherLink_"+guid+"'>"+
 							"</div>"+
@@ -209,6 +233,7 @@ function AddMapping(guid, numMappings){
 					"<option value='char'>character</option>"+
 					"<option value='substr'>sub string</option>"+
 					"<option value='direct'>direct copy</option>"+
+					"<option value='eval'>custom evaluation</option>"+
 				"</select><br/>"+
 
 				"<div id='ShowCharacterOption_"+(currentNumberMappings+1)+"_"+guid+"' style='display:none;'>"+
@@ -217,10 +242,12 @@ function AddMapping(guid, numMappings){
 				"<div id='ShowSubStringOption_"+(currentNumberMappings+1)+"_"+guid+"' style='display:none;'>"+
 					"substring<br/>"+
 					"start <input type='text' id='inputSubStart_"+(currentNumberMappings+1)+"_"+guid+"' name='inputSubStart_"+(currentNumberMappings+1)+"_"+guid+"'></input><br/>"+
-					"end <input type='text' id='inputSubEnd_"+(currentNumberMappings+1)+"_"+guid+"' name='inputSubEnd_"+(currentNumberMappings+1)+"_"+guid+"'></input>";
+					"end <input type='text' id='inputSubEnd_"+(currentNumberMappings+1)+"_"+guid+"' name='inputSubEnd_"+(currentNumberMappings+1)+"_"+guid+"'></input>"+
+				"</div>"+
+				"<div id='ShowCustomEval_"+(currentNumberMappings+1)+"_"+guid+"' style='display:none;'>"+
+					"Use the variable '#ColValue' in place of column value.<br/>"+
+					"<textarea cols='35' rows='10' id='inputCustomEval_"+(currentNumberMappings+1)+"_"+guid+"' name='inputCustomEval_"+(currentNumberMappings+1)+"_"+guid+"'> </textarea>"+
 				"</div>";
-
-				
 				
 	mappingsList.innerHTML += html;
 }

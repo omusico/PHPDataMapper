@@ -88,6 +88,16 @@ class MappingProcessor{
 					$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newValue;
 
 					break;
+				case "eval":
+					$ColValue = $existingColumnValue;
+
+					$eval =  str_replace("#ColValue","\"".$ColValue."\"",$mapping->ProcessColumn->customEvaluation);
+					$newValue = "";
+					eval("\$newValue = $eval");
+					
+					$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newValue;
+
+					break;
 			}
 		}
 	}
@@ -129,6 +139,15 @@ class MappingProcessor{
 											);
 					case "direct":
 						$newValue = $existingColumnValue;
+						break;
+
+					case "eval":
+						$ColValue = $existingColumnValue;
+					
+						$eval =  str_replace("#ColValue","\"".$ColValue."\"",$mapping->ProcessColumns[$k]->customEvaluation);
+						$newValue = "";
+						eval("\$newValue = $eval");
+
 						break;
 				}
 				
