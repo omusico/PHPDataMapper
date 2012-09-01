@@ -38,10 +38,10 @@
 <div id='mappings'>
 </div>
 <br/>
-<a href='javascript:void(0);' onclick='javascript:getOneToOneMappingHTML();'>Add a 1:1 mapping</a><br/>
-<a href='javascript:void(0);' onclick='javascript:getManyToOneMappingHTML();'>Add a many:1 mapping</a><br/>
+<a href='javascript:void(0);' onclick='javascript:getOneToOneMappingHTML();'><img border='0' src='images/add11.png' /></a>&nbsp;
+<a href='javascript:void(0);' onclick='javascript:getManyToOneMappingHTML();'><img border='0' src='images/addmany1.png' /></a><br/>
 
-<input type='text' id='guidList' name='guidList'></input>
+<input type='hidden' id='guidList' name='guidList'></input>
 <input type='submit' value='Process'></input>
 </form>
 </body>

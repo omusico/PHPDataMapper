@@ -34,12 +34,85 @@ function showOptionsManyToOne(dropdown, number){
 	}
 }
 
+function deleteOneToOne(guid){
+	var inputColNum = document.getElementById('inputColumnNumber_'+guid);
+	var inputFn = document.getElementById('inputFunction_'+guid);
+	var outputColNum = document.getElementById('outputColumnNumber_'+guid);
+	var inputCharNum = document.getElementById('inputCharNum_'+guid);
+	var inputSubStart = document.getElementById('inputSubStart_'+guid);
+	var inputSubEnd = document.getElementById('inputSubEnd_'+guid);
+
+	var table = document.getElementById('OneToOneTable_'+guid);
+	
+	inputColNum.disabled = true;
+	inputFn.disabled = true;
+	outputColNum.disabled = true;
+	inputCharNum.disabled = true;
+	inputSubStart.disabled = true;
+	inputSubEnd.disabled = true;
+
+	table.style.display = 'none'
+
+	DeleteFromGuidList(guid);
+}
+function deleteManyToOne(guid){
+	var numMappings = document.getElementById('numMappings_'+guid).value;
+
+	for(var i=1; i<=numMappings; i++){
+		var inputColNum = document.getElementById('inputColumnNumber_'+i+'_'+guid);
+		var inputFn = document.getElementById('inputFunction_'+i+'_'+guid);
+		var inputCharNum = document.getElementById('inputCharNum_'+i+'_'+guid);
+		var inputSubStart = document.getElementById('inputSubStart_'+i+'_'+guid);
+		var inputSubEnd = document.getElementById('inputSubEnd_'+i+'_'+guid);
+
+		inputColNum.disabled = true;
+		inputFn.disabled = true;
+		inputCharNum.disabled = true;
+		inputSubStart.disabled = true;
+		inputSubEnd.disabled = true;
+	}
+
+	var table = document.getElementById('ManyToOneTable_'+guid);
+	var outputColNum = document.getElementById('outputColumnNumber_'+guid);
+	var outputColOrder = document.getElementById('outputColumnOrder_'+guid);
+
+	outputColNum.disabled = true;
+	outputColOrder.disabled = true;
+
+	table.style.display = 'none';
+
+	DeleteFromGuidList(guid);
+}
+
+function DeleteFromGuidList(guid){
+	var guidList = document.getElementById('guidList').value;
+	var vals = guidList.split(';');
+	var allVals = new Array();
+
+	var finalValue = "";
+
+	var count = 0;
+	for(var i=0; i<(vals.length-1); i++){
+
+		var values = vals[i].split(',');
+		if(values[0] != guid){
+			allVals[count] = values;
+			count++;
+		}
+	}
+
+	for(var i=0; i<count; i++){
+		finalValue += allVals[i][0]+","+allVals[i][1]+";"
+	}
+	 document.getElementById('guidList').value = finalValue;
+}
+
 function getOneToOneMappingHTML(){
 	var guid = guidGenerator();
 
 	document.getElementById("guidList").value += guid+",1:1;";
 
-	var html =  "<table border='1'>"+
+	var html =  "<table id='OneToOneTable_"+guid+"' border='1'>"+
 					"<tr>"+
 						"<td valign='top'>"+
 							"Input column number: <input id='inputColumnNumber_"+guid+"' name='inputColumnNumber_"+guid+"'  type='text'></input><br/>"+
@@ -62,6 +135,9 @@ function getOneToOneMappingHTML(){
 						"<td valign='top'>"+
 							"Output column number: <input id='outputColumnNumber_"+guid+"' name='outputColumnNumber_"+guid+"' type='text'></input>"+
 						"</td>"+
+						"<td valign='top'>"+
+							"<a href='javascript:void(0);'  onclick=\"javascript:deleteOneToOne('"+guid+"')\"><img border='0' src='images/delete.png' /></a>"+
+						"</td>"+
 					"</tr>"+
 				"</table>";
 
@@ -73,7 +149,7 @@ function getManyToOneMappingHTML(){
 
 	document.getElementById("guidList").value += guid+",many:1;";
 
-	var html =  "<table border='1'>"+
+	var html =  "<table id='ManyToOneTable_"+guid+"' border='1'>"+
 					"<tr>"+
 						"<td valign='top'>"+
 							"<div id='ListOfMappings_"+guid+"'>"+
@@ -105,6 +181,10 @@ function getManyToOneMappingHTML(){
 							"Output column number: <input id='outputColumnNumber_"+guid+"' name='outputColumnNumber_"+guid+"' type='text'></input><br/>"+
 							"Concatenation: <input id='outputColumnOrder_"+guid+"' name='outputColumnOrder_"+guid+"' type='text'></input>"+
 						"</td>"+
+
+						"<td valign='top'>"+
+							"<a href='javascript:void(0);' onclick=\"javascript:deleteManyToOne('"+guid+"')\"><img border='0' src='images/delete.png' /></a>"+
+						"</td>"+
 					"</tr>"+
 				"</table>";
 
@@ -112,7 +192,7 @@ function getManyToOneMappingHTML(){
 
 	var currentNumberMappings = document.getElementById("numMappings_"+guid).value;
 
-	document.getElementById("AddAnotherLink_"+guid).innerHTML = "<a href='javascript:void(0);' onclick='javascript:AddMapping(\""+guid+"\","+ currentNumberMappings +");'>Add another</a>";
+	document.getElementById("AddAnotherLink_"+guid).innerHTML = "<a href='javascript:void(0);' onclick='javascript:AddMapping(\""+guid+"\","+ currentNumberMappings +");'><img border='0' src='images/addanother.png' /></a>";
 }
 
 function AddMapping(guid, numMappings){
