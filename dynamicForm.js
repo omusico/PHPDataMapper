@@ -58,7 +58,9 @@ function deleteOneToOne(guid){
 	
 	inputColNum.disabled = true;
 	inputFn.disabled = true;
-	outputColNum.disabled = true;
+	if(outputColNum != null){
+		outputColNum.disabled = true;	
+	}	
 	inputCharNum.disabled = true;
 	inputSubStart.disabled = true;
 	inputSubLength.disabled = true;
@@ -88,8 +90,10 @@ function deleteManyToOne(guid){
 	var outputColNum = document.getElementById('outputColumnNumber_'+guid);
 	var outputColOrder = document.getElementById('outputColumnOrder_'+guid);
 
-	outputColNum.disabled = true;
-	outputColOrder.disabled = true;
+	if(outputColNum != null){
+		outputColNum.disabled = true;	
+	}
+	outputColOrder.disabled = true;	
 
 	table.style.display = 'none';
 
@@ -305,11 +309,14 @@ function getOneToOneMappingHTML(){
 	cell4Image.setAttribute('src', 'images/delete.png');
 	cell4Image.setAttribute('border','0');
 
+	var linebreak = document.createElement('br');
+
 	//compose the HTML document elements using appendChild.
 	table.appendChild(row1);
 		row1.appendChild(cell1);
 			cell1.appendChild(inputColNumDiv);
 			cell1.appendChild(inputColNumInput);
+			cell1.appendChild(linebreak);
 			cell1.appendChild(inputInputFunction);
 				inputInputFunction.appendChild(inputFunctionOpt1);
 				inputInputFunction.appendChild(inputFunctionOpt2);
@@ -331,8 +338,6 @@ function getOneToOneMappingHTML(){
 		row1.appendChild(cell2);
 			cell2.appendChild(cell2image);
 		row1.appendChild(cell3);
-			cell3.appendChild(cell3DivElement);
-			cell3.appendChild(cell3InputOutputCol);
 			if(mappingDestination == "ToDataStructure"){
 				cell3.appendChild(dataStructureText);
 				cell3.appendChild(dataStructureDestDropDown);
@@ -345,6 +350,9 @@ function getOneToOneMappingHTML(){
 				dataStructureDestDropDown.appendChild(dataStructureDestOpt7);
 				dataStructureDestDropDown.appendChild(dataStructureDestOpt8);
 
+			}else{
+				cell3.appendChild(cell3DivElement);
+				cell3.appendChild(cell3InputOutputCol);	
 			}
 		row1.appendChild(cell4);
 			cell4.appendChild(cell4AHref);
@@ -358,6 +366,46 @@ function getManyToOneMappingHTML(){
 
 	document.getElementById("guidList").value += guid+",many:1;";
 
+	var mappingDestination = document.getElementById("MappingType").value;
+
+	var dataStructureDestDropDown = document.createElement('select');
+	dataStructureDestDropDown.setAttribute('id','outputDataMember_'+guid);
+	dataStructureDestDropDown.setAttribute('name','outputDataMember_'+guid);
+
+	var dataStructureDestOpt1 = document.createElement('option');
+    dataStructureDestOpt1.setAttribute('value', 'Album->name');
+    dataStructureDestOpt1.innerHTML = 'Album->name';
+    
+    var dataStructureDestOpt2 = document.createElement('option');
+    dataStructureDestOpt2.setAttribute('value', 'Album->discNumber');
+    dataStructureDestOpt2.innerHTML = 'Album->discNumber';
+    
+    var dataStructureDestOpt3 = document.createElement('option');
+    dataStructureDestOpt3.setAttribute('value', 'Track->artists');
+    dataStructureDestOpt3.innerHTML = 'Track->artists';
+    
+    var dataStructureDestOpt4 = document.createElement('option');
+    dataStructureDestOpt4.setAttribute('value', 'Track->name');
+    dataStructureDestOpt4.innerHTML = 'Track->name';
+    
+    var dataStructureDestOpt5 = document.createElement('option');
+    dataStructureDestOpt5.setAttribute('value', 'Track->length');
+    dataStructureDestOpt5.innerHTML = 'Track->length';
+    
+    var dataStructureDestOpt6 = document.createElement('option');
+    dataStructureDestOpt6.setAttribute('value', 'Track->number');
+    dataStructureDestOpt6.innerHTML = 'Track->number';
+    
+    var dataStructureDestOpt7 = document.createElement('option');
+    dataStructureDestOpt7.setAttribute('value', 'Track->ISRC');
+    dataStructureDestOpt7.innerHTML = 'Track->ISRC';
+    
+    var dataStructureDestOpt8 = document.createElement('option');
+    dataStructureDestOpt8.setAttribute('value', 'Album->ISBN');
+    dataStructureDestOpt8.innerHTML = 'Album->ISBN';
+
+    var dataStructureText = document.createElement('div');
+    dataStructureText.innerHTML = "Output member:";
 
 	//Create the HTML Elements and append them as children
 	var table = document.createElement('table');
@@ -515,6 +563,8 @@ function getManyToOneMappingHTML(){
 	cell4Image.setAttribute('src', 'images/delete.png');
 	cell4Image.setAttribute('border','0');
 
+	var linebreak = document.createElement('br');
+
 	//compose the HTML document elements using appendChild.
 	table.appendChild(row1);
 		row1.appendChild(cell1);
@@ -523,6 +573,7 @@ function getManyToOneMappingHTML(){
 				listOfMappingsDiv.appendChild(mappingNumber)
 				listOfMappingsDiv.appendChild(inputColNumDiv);
 				listOfMappingsDiv.appendChild(inputColNumInput);
+				listOfMappingsDiv.appendChild(linebreak);
 				listOfMappingsDiv.appendChild(inputInputFunction);
 					inputInputFunction.appendChild(inputFunctionOpt1);
 					inputInputFunction.appendChild(inputFunctionOpt2);
@@ -545,66 +596,30 @@ function getManyToOneMappingHTML(){
 		row1.appendChild(cell2);
 			cell2.appendChild(cell2image);
 		row1.appendChild(cell3);
-			cell3.appendChild(cell3DivElement);
-			cell3.appendChild(cell3InputOutputCol);
+
+			if(mappingDestination == "ToDataStructure"){
+				cell3.appendChild(dataStructureText);
+				cell3.appendChild(dataStructureDestDropDown);
+				dataStructureDestDropDown.appendChild(dataStructureDestOpt1);
+				dataStructureDestDropDown.appendChild(dataStructureDestOpt2);
+				dataStructureDestDropDown.appendChild(dataStructureDestOpt3);
+				dataStructureDestDropDown.appendChild(dataStructureDestOpt4);
+				dataStructureDestDropDown.appendChild(dataStructureDestOpt5);
+				dataStructureDestDropDown.appendChild(dataStructureDestOpt6);
+				dataStructureDestDropDown.appendChild(dataStructureDestOpt7);
+				dataStructureDestDropDown.appendChild(dataStructureDestOpt8);
+
+			}else{
+				cell3.appendChild(cell3DivElement);
+				cell3.appendChild(cell3InputOutputCol);
+			}
+
 			cell3.appendChild(concatenationDiv);
 			cell3.appendChild(concatenationInput);
+
 		row1.appendChild(cell4);
 			cell4.appendChild(cell4AHref);
 				cell4AHref.appendChild(cell4Image);
-
-
-
-
-	/*var html =  "<table width='800' id='ManyToOneTable_"+guid+"' border='1'>"+
-					"<tr>"+
-						"<td style='border:0px;' valign='top'>"+
-							"<div id='ListOfMappings_"+guid+"'>"+
-							"<input type='hidden' id='numMappings_"+guid+"' name='numMappings_"+guid+"' 
-							value='1' ></input>"+
-							"<b>1</b><br/>"+
-							"Input column number: <input id='inputColumnNumber_1_"+guid+"' size='3' name='inputColumnNumber_1_"+guid+"' type='text'></input><br/>"+
-							"<select id='inputFunction_1_"+guid+"' name='inputFunction_1_"+guid+"' onchange='javascript:showOptionsManyToOne(this,1);'>"+
-								"<option value='--'>--Choose a function--</option>"+
-								"<option value='char'>character</option>"+
-								"<option value='substr'>sub string</option>"+
-								"<option value='direct'>direct copy</option>"+
-								"<option value='eval'>custom evaluation</option>"+
-							"</select><br/>"+
-
-							"<div id='ShowCharacterOption_1_"+guid+"' style='display:none;'>"+
-								"character <input size='3' type='text' id='inputCharNum_1_"+guid+"' name='inputCharNum_1_"+guid+"'></input><br/>"+
-							"</div>"+
-							"<div id='ShowSubStringOption_1_"+guid+"' style='display:none;'>"+
-								"substring<br/>"+
-								"start <input size='3' type='text' id='inputSubStart_1_"+guid+"' name='inputSubStart_1_"+guid+"'></input><br/>"+
-								"length <input size='3' type='text' id='inputSubLength_1_"+guid+"' name='inputSubLength_1_"+guid+"'></input>"+
-							"</div>"+
-							
-							"<div id='ShowCustomEval_1_"+guid+"' style='display:none;'>"+
-								"Use the variable '#ColValue' in place of column value.<br/>"+
-								"<textarea cols='35' rows='10' id='inputCustomEval_1_"+guid+"' name='inputCustomEval_1_"+guid+"'> </textarea>"+
-							"</div>"+
-
-							"</div>"+
-							"<div id='AddAnotherLink_"+guid+"'>"+
-							"</div>"+
-						"</td>"+
-						"<td style='border:0px;'><img src='images/arrow.png' /></td>"+
-						"<td style='border:0px;' >"+
-							"Output column number: <input size='3' id='outputColumnNumber_"+guid+"' name='outputColumnNumber_"+guid+"' type='text'></input><br/>"+
-							"Concatenation: <input size='15' 
-							id='outputColumnOrder_"+guid+"' name='outputColumnOrder_"+guid+"' 
-							type='text'></input>"+
-						"</td>"+
-
-						"<td style='border:0px;' valign='top' align='right'>"+
-							"<a href='javascript:void(0);' onclick=\"javascript:deleteManyToOne('"+guid+"')\"><img border='0' src='images/delete.png' /></a>"+
-						"</td>"+
-					"</tr>"+
-				"</table>";*/
-
-
 
 	document.getElementById("mappings").appendChild(table);
 
@@ -710,9 +725,12 @@ function AddMapping(guid, numMappings){
 	customEvalTextInput.setAttribute('id','inputCustomEval_'+(currentNumberMappings+1)+'_'+guid);
 	customEvalTextInput.setAttribute('name','inputCustomEval_'+(currentNumberMappings+1)+'_'+guid);
 
+	var linebreak = document.createElement('br');
+
 	listOfMappingsDiv.appendChild(mappingNumber);
 	listOfMappingsDiv.appendChild(inputColNumDiv);
 	listOfMappingsDiv.appendChild(inputColNumInput);
+	listOfMappingsDiv.appendChild(linebreak);
 	listOfMappingsDiv.appendChild(inputInputFunction);
 		inputInputFunction.appendChild(inputFunctionOpt1);
 		inputInputFunction.appendChild(inputFunctionOpt2);
@@ -731,30 +749,6 @@ function AddMapping(guid, numMappings){
 	listOfMappingsDiv.appendChild(showCustomEvalDiv);
 		showCustomEvalDiv.appendChild(showCustomEvalInnerDiv);
 		showCustomEvalDiv.appendChild(customEvalTextInput);
-
-
-	/*var html =  "<br/><b>"+(currentNumberMappings+1)+"</b><br/>"+
-				"Input column number: <input size='3' id='inputColumnNumber_"+(currentNumberMappings+1)+"_"+guid+"' name='inputColumnNumber_"+(currentNumberMappings+1)+"_"+guid+"' type='text'></input><br/>"+
-				"<select id='inputFunction_"+(currentNumberMappings+1)+"_"+guid+"' name='inputFunction_"+(currentNumberMappings+1)+"_"+guid+"' onchange='javascript:showOptionsManyToOne(this, "+(currentNumberMappings+1)+");'>"+
-					"<option value='--'>--Choose a function--</option>"+
-					"<option value='char'>character</option>"+
-					"<option value='substr'>sub string</option>"+
-					"<option value='direct'>direct copy</option>"+
-					"<option value='eval'>custom evaluation</option>"+
-				"</select><br/>"+
-
-				"<div id='ShowCharacterOption_"+(currentNumberMappings+1)+"_"+guid+"' style='display:none;'>"+
-					"character <input size='3' type='text' id='inputCharNum_"+(currentNumberMappings+1)+"_"+guid+"' name='inputCharNum_"+(currentNumberMappings+1)+"_"+guid+"'></input><br/>"+
-				"</div>"+
-				"<div id='ShowSubStringOption_"+(currentNumberMappings+1)+"_"+guid+"' style='display:none;'>"+
-					"substring<br/>"+
-					"start <input size='3' type='text' id='inputSubStart_"+(currentNumberMappings+1)+"_"+guid+"' name='inputSubStart_"+(currentNumberMappings+1)+"_"+guid+"'></input><br/>"+
-					"length <input size='3' type='text' id='inputSubLength_"+(currentNumberMappings+1)+"_"+guid+"' name='inputSubLength_"+(currentNumberMappings+1)+"_"+guid+"'></input>"+
-				"</div>"+
-				"<div id='ShowCustomEval_"+(currentNumberMappings+1)+"_"+guid+"' style='display:none;'>"+
-					"Use the variable '#ColValue' in place of column value.<br/>"+
-					"<textarea cols='35' rows='10' id='inputCustomEval_"+(currentNumberMappings+1)+"_"+guid+"' name='inputCustomEval_"+(currentNumberMappings+1)+"_"+guid+"'> </textarea>"+
-				"</div>";*/
 				
 	mappingsList.appendChild(listOfMappingsDiv);
 }

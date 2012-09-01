@@ -15,26 +15,30 @@
 
 			$objPHPExcel = $objReader->load($fileName);
 		
-			foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
+            $worksheetIterator = $objPHPExcel->getWorksheetIterator();
+            
+            //get the first worksheet
+            $worksheet = $worksheetIterator->current();
+                                     
+			$i = 0;
+			foreach ($worksheet->getRowIterator() as $row)
+			{
+				$theRow = new Row();
 
-				$i = 0;
-				foreach ($worksheet->getRowIterator() as $row)
-				{
-					$theRow = new Row();
+				$cellIterator = $row->getCellIterator();
+				$cellIterator->setIterateOnlyExistingCells(false); 
+				$j=0;
+				foreach ($cellIterator as $cell) {
+					$theRow->values[$j] = $cell->getCalculatedValue();
+					$j++;
+				}	
 
-					$cellIterator = $row->getCellIterator();
-					$cellIterator->setIterateOnlyExistingCells(false); 
-					$j=0;
-					foreach ($cellIterator as $cell) {
-						$theRow->values[$j] = $cell->getCalculatedValue();
-						$j++;
-					}	
-
-					$this->data->rows[$i] = $theRow;
-					$i++;
-				}
+				$this->data->rows[$i] = $theRow;
+                
+				$i++;
 			}
-
+            
+            
 		}
 	}
 

@@ -50,13 +50,14 @@ class MappingProcessorDataStructure{
 
 	public function FillArray(){
 		$rowCount = count($this->dataFileClass->rows);
-
+        echo $rowCount."<br/>";
 		for($j=0; $j<$rowCount; $j++){
 			$this->outputDataStructure[$j] = new NonNormalisedData();
 		}
 	}
 
 	public function Normalise($data){
+        
 		$albums = array();
 
 		$ISBNstemp = array();
@@ -68,25 +69,22 @@ class MappingProcessorDataStructure{
 		}
 
 		$ISBNstemp = array_unique($ISBNstemp);
-
-        for($i=0; $i<count($ISBNstemp); $i++){
-            $ISBNs[$i] = array_pop($ISBNstemp);
-        }
+                                                     
+        foreach($ISBNstemp as $value){
+            $ISBNs[] = $value;
+        }                                              
         
         //for each of the ISBNs 
         //    make an album
         //    loop through each track for the NonNormalisedData
         //    if the current track has a match to the current ISBN
         //      add a new track to the current album
-                                 
 		for($i=0; $i<count($ISBNs); $i++){
 		    $currentISBN = $ISBNs[$i];
-            $albums[$i] = new Album();
-            
-            echo "<br><Br>data ".$data[$i]->albumIsbn."<br><Br>";
-            echo "<br><Br>current isbn ".$currentISBN."<br><Br>";
+            $albums[$i] = new Album();                  
             
             for($j=0; $j<count($data); $j++){
+                
                 if($data[$j]->albumIsbn == $currentISBN){
                     //this track belongs to the current album
                     $currentTrack = new Track();
@@ -106,9 +104,7 @@ class MappingProcessorDataStructure{
 		}
         
         echo "<br/><br/>";
-        print_r($albums);
-        echo "<br/><br/>";
-        
+        print_r($albums);         
 	}
 
 	public function processOneToOne($mapping){
@@ -129,10 +125,9 @@ class MappingProcessorDataStructure{
 			
 			$existingColumnValue = $this->dataFileClass->rows[$j]->values[$columnNumber];
 
-			
-
-					
+            
 			switch($mapping->ProcessColumn->fnction){
+                
 				case "substr":
 					$newValue = substr( $existingColumnValue, 
 										$mapping->ProcessColumn->subStringStart, 
@@ -270,7 +265,7 @@ class MappingProcessorDataStructure{
 
 					break;
 			}
-		}
+		} 
 
 	}
 

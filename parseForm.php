@@ -79,7 +79,9 @@
 
                     break;
             }   
-        }else if($outputType == "ToDataStructure"){
+        }
+        
+        else if($outputType == "ToDataStructure"){
             switch($values[1]){
                 case "1:1":
                     $mapping = new OneToOne();
