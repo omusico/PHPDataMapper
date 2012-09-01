@@ -556,12 +556,12 @@ function getOneToOneMappingHTML(){
 	inputColNumInput.setAttribute('name', 'inputColumnNumber_'+guid);
 	inputColNumInput.setAttribute('size', '3');
 	inputColNumInput.setAttribute('type', 'text');
-	inputColNumInput.setAttribute('onkeyup','document.getElementById("DisplayValue_'+guid+'").innerHTML = getColumnValueFromFirstRowOfFile(this.value);');
+	inputColNumInput.setAttribute('onkeyup','queryAjaxLiveDataServiceForNewColValue("'+guid+'");');
 
 	var inputInputFunction = document.createElement('select');
 	inputInputFunction.setAttribute('id', 'inputFunction_'+guid);
 	inputInputFunction.setAttribute('name','inputFunction_'+guid);
-	inputInputFunction.setAttribute('onchange', 'javascript:showOptions(this);');
+	inputInputFunction.setAttribute('onchange', 'javascript:showOptions(this);queryAjaxLiveDataServiceForNewColValue("'+guid+'");');
 
 	var inputFunctionOpt1 = document.createElement('option');
 	inputFunctionOpt1.setAttribute('value', '--');
@@ -595,6 +595,7 @@ function getOneToOneMappingHTML(){
 	inputCharacter.setAttribute('type','text');
 	inputCharacter.setAttribute('id','inputCharNum_'+guid);
 	inputCharacter.setAttribute('name','inputCharNum_'+guid);
+	inputCharacter.setAttribute('onkeyup','queryAjaxLiveDataServiceForNewColValue("'+guid+'");');
 
 	var showSubStringOption = document.createElement('div');
 	showSubStringOption.setAttribute('id','ShowSubStringOption_'+guid);
@@ -614,12 +615,14 @@ function getOneToOneMappingHTML(){
 	subStringStartInput.setAttribute('type','text');
 	subStringStartInput.setAttribute('id','inputSubStart_'+guid);
 	subStringStartInput.setAttribute('name','inputSubStart_'+guid);
+	subStringStartInput.setAttribute('onkeyup','queryAjaxLiveDataServiceForNewColValue("'+guid+'");');
 
 	var subStringLengthInput = document.createElement('input');
 	subStringLengthInput.setAttribute('size','3');
 	subStringLengthInput.setAttribute('type','text');
 	subStringLengthInput.setAttribute('id','inputSubLength_'+guid);
 	subStringLengthInput.setAttribute('name','inputSubLength_'+guid);
+	subStringLengthInput.setAttribute('onkeyup','queryAjaxLiveDataServiceForNewColValue("'+guid+'");');
 
 	var showCustomEvalDiv = document.createElement('div');
 	showCustomEvalDiv.setAttribute('id', 'ShowCustomEval_'+guid);
@@ -633,6 +636,7 @@ function getOneToOneMappingHTML(){
 	customEvalTextInput.setAttribute('rows','10');
 	customEvalTextInput.setAttribute('id','inputCustomEval_'+guid);
 	customEvalTextInput.setAttribute('name','inputCustomEval_'+guid);
+	customEvalTextInput.setAttribute('onkeyup','queryAjaxLiveDataServiceForNewColValue("'+guid+'");');
 
 	var cell2 = document.createElement('td');
 	cell2.setAttribute('style','border:0px');
@@ -676,11 +680,19 @@ function getOneToOneMappingHTML(){
 	var ValTableRow = document.createElement("tr");
 	var valTableCell1 = document.createElement("td");
 	var valTableCell2 = document.createElement("td");
+	var valTableCell3 = document.createElement("td");
 	//setup a div 
 	var valDiv = document.createElement("div");
 	valDiv.setAttribute("id", "DisplayValue_"+guid);
 	valDiv.setAttribute("name", "DisplayValue_"+guid);
 	valDiv.setAttribute("style","color:red;");
+
+	//ajax loading image
+	var ajaxImage = document.createElement('img');
+	ajaxImage.setAttribute('src','images/loader.gif');
+	ajaxImage.setAttribute('id','liveDataLoader_'+guid);
+	ajaxImage.setAttribute('name','liveDataLoader_'+guid);
+	ajaxImage.setAttribute('style','display:none;');
 
 	//compose the HTML document elements using appendChild.
 	table.appendChild(row1);
@@ -693,6 +705,8 @@ function getOneToOneMappingHTML(){
 						valTableCell1.appendChild(inputColNumInput);
 					ValTableRow.appendChild(valTableCell2);
 						valTableCell2.appendChild(valDiv);
+					ValTableRow.appendChild(valTableCell3);
+						valTableCell3.appendChild(ajaxImage);
 			cell1.appendChild(inputInputFunction);
 				inputInputFunction.appendChild(inputFunctionOpt1);
 				inputInputFunction.appendChild(inputFunctionOpt2);
@@ -855,12 +869,12 @@ function getManyToOneMappingHTML(){
 	inputColNumInput.setAttribute('name', 'inputColumnNumber_1_'+guid);
 	inputColNumInput.setAttribute('size', '3');
 	inputColNumInput.setAttribute('type', 'text');
-	inputColNumInput.setAttribute('onkeyup','document.getElementById("DisplayValue_1_'+guid+'").innerHTML = getColumnValueFromFirstRowOfFile(this.value);');
+	inputColNumInput.setAttribute('onkeyup','queryAjaxLiveDataServiceForNewColValueManyToOne("1", "'+guid+'");');
 
 	var inputInputFunction = document.createElement('select');
 	inputInputFunction.setAttribute('id', 'inputFunction_1_'+guid);
 	inputInputFunction.setAttribute('name','inputFunction_1_'+guid);
-	inputInputFunction.setAttribute('onchange', 'javascript:showOptionsManyToOne(this,1);');
+	inputInputFunction.setAttribute('onchange', 'javascript:showOptionsManyToOne(this,1);queryAjaxLiveDataServiceForNewColValueManyToOne("1", "'+guid+'");');
 
 	var inputFunctionOpt1 = document.createElement('option');
 	inputFunctionOpt1.setAttribute('value', '--');
@@ -894,6 +908,7 @@ function getManyToOneMappingHTML(){
 	inputCharacter.setAttribute('type','text');
 	inputCharacter.setAttribute('id','inputCharNum_1_'+guid);
 	inputCharacter.setAttribute('name','inputCharNum_1_'+guid);
+	inputCharacter.setAttribute('onkeyup','queryAjaxLiveDataServiceForNewColValueManyToOne("1", "'+guid+'");');
 
 	var showSubStringOption = document.createElement('div');
 	showSubStringOption.setAttribute('id','ShowSubStringOption_1_'+guid);
@@ -913,12 +928,14 @@ function getManyToOneMappingHTML(){
 	subStringStartInput.setAttribute('type','text');
 	subStringStartInput.setAttribute('id','inputSubStart_1_'+guid);
 	subStringStartInput.setAttribute('name','inputSubStart_1_'+guid);
+	subStringStartInput.setAttribute('onkeyup','queryAjaxLiveDataServiceForNewColValueManyToOne("1", "'+guid+'");');
 
 	var subStringLengthInput = document.createElement('input');
 	subStringLengthInput.setAttribute('size','3');
 	subStringLengthInput.setAttribute('type','text');
 	subStringLengthInput.setAttribute('id','inputSubLength_1_'+guid);
 	subStringLengthInput.setAttribute('name','inputSubLength_1_'+guid);
+	subStringLengthInput.setAttribute('onkeyup','queryAjaxLiveDataServiceForNewColValueManyToOne("1", "'+guid+'");');
 
 	var showCustomEvalDiv = document.createElement('div');
 	showCustomEvalDiv.setAttribute('id', 'ShowCustomEval_1_'+guid);
@@ -932,6 +949,7 @@ function getManyToOneMappingHTML(){
 	customEvalTextInput.setAttribute('rows','10');
 	customEvalTextInput.setAttribute('id','inputCustomEval_1_'+guid);
 	customEvalTextInput.setAttribute('name','inputCustomEval_1_'+guid);
+	customEvalTextInput.setAttribute('onkeyup','queryAjaxLiveDataServiceForNewColValueManyToOne("1", "'+guid+'");');
 
 
 	var addAnotherLink = document.createElement('div');
@@ -988,11 +1006,18 @@ function getManyToOneMappingHTML(){
 	var ValTableRow = document.createElement("tr");
 	var valTableCell1 = document.createElement("td");
 	var valTableCell2 = document.createElement("td");
+	var valTableCell3 = document.createElement("td");
 	//setup a div 
 	var valDiv = document.createElement("div");
 	valDiv.setAttribute("id", "DisplayValue_1_"+guid);
 	valDiv.setAttribute("name", "DisplayValue_1_"+guid);
 	valDiv.setAttribute("style","color:red;");
+	//ajax loading image
+	var ajaxImage = document.createElement('img');
+	ajaxImage.setAttribute('src','images/loader.gif');
+	ajaxImage.setAttribute('id','liveDataLoader_1_'+guid);
+	ajaxImage.setAttribute('name','liveDataLoader_1_'+guid);
+	ajaxImage.setAttribute('style','display:none;');
 
 	//compose the HTML document elements using appendChild.
 	table.appendChild(row1);
@@ -1007,6 +1032,8 @@ function getManyToOneMappingHTML(){
 							valTableCell1.appendChild(inputColNumInput);
 						ValTableRow.appendChild(valTableCell2);
 							valTableCell2.appendChild(valDiv);
+						ValTableRow.appendChild(valTableCell3);
+							valTableCell3.appendChild(ajaxImage);
 				listOfMappingsDiv.appendChild(inputInputFunction);
 					inputInputFunction.appendChild(inputFunctionOpt1);
 					inputInputFunction.appendChild(inputFunctionOpt2);
@@ -1082,12 +1109,12 @@ function AddMapping(guid, numMappings){
 	inputColNumInput.setAttribute('name', 'inputColumnNumber_'+(currentNumberMappings+1)+'_'+guid);
 	inputColNumInput.setAttribute('size', '3');
 	inputColNumInput.setAttribute('type', 'text');
-	inputColNumInput.setAttribute('onkeyup','document.getElementById("DisplayValue_'+(currentNumberMappings+1)+'_'+guid+'").innerHTML = getColumnValueFromFirstRowOfFile(this.value);');
+	inputColNumInput.setAttribute('onkeyup','queryAjaxLiveDataServiceForNewColValueManyToOne("'+(currentNumberMappings+1)+'", "'+guid+'");');
 
 	var inputInputFunction = document.createElement('select');
 	inputInputFunction.setAttribute('id', 'inputFunction_'+(currentNumberMappings+1)+'_'+guid);
 	inputInputFunction.setAttribute('name','inputFunction_'+(currentNumberMappings+1)+'_'+guid);
-	inputInputFunction.setAttribute('onchange', 'javascript:showOptionsManyToOne(this,'+(currentNumberMappings+1)+');');
+	inputInputFunction.setAttribute('onchange', 'javascript:showOptionsManyToOne(this,'+(currentNumberMappings+1)+');queryAjaxLiveDataServiceForNewColValueManyToOne("'+(currentNumberMappings+1)+'", "'+guid+'");');
 
 	var inputFunctionOpt1 = document.createElement('option');
 	inputFunctionOpt1.setAttribute('value', '--');
@@ -1121,6 +1148,7 @@ function AddMapping(guid, numMappings){
 	inputCharacter.setAttribute('type','text');
 	inputCharacter.setAttribute('id','inputCharNum_'+(currentNumberMappings+1)+'_'+guid);
 	inputCharacter.setAttribute('name','inputCharNum_'+(currentNumberMappings+1)+'_'+guid);
+	inputCharacter.setAttribute('onkeyup','queryAjaxLiveDataServiceForNewColValueManyToOne("'+(currentNumberMappings+1)+'", "'+guid+'");');
 
 	var showSubStringOption = document.createElement('div');
 	showSubStringOption.setAttribute('id','ShowSubStringOption_'+(currentNumberMappings+1)+'_'+guid);
@@ -1140,12 +1168,14 @@ function AddMapping(guid, numMappings){
 	subStringStartInput.setAttribute('type','text');
 	subStringStartInput.setAttribute('id','inputSubStart_'+(currentNumberMappings+1)+'_'+guid);
 	subStringStartInput.setAttribute('name','inputSubStart_'+(currentNumberMappings+1)+'_'+guid);
+	subStringStartInput.setAttribute('onkeyup','queryAjaxLiveDataServiceForNewColValueManyToOne("'+(currentNumberMappings+1)+'", "'+guid+'");');
 
 	var subStringLengthInput = document.createElement('input');
 	subStringLengthInput.setAttribute('size','3');
 	subStringLengthInput.setAttribute('type','text');
 	subStringLengthInput.setAttribute('id','inputSubLength_'+(currentNumberMappings+1)+'_'+guid);
 	subStringLengthInput.setAttribute('name','inputSubLength_'+(currentNumberMappings+1)+'_'+guid);
+	subStringLengthInput.setAttribute('onkeyup','queryAjaxLiveDataServiceForNewColValueManyToOne("'+(currentNumberMappings+1)+'", "'+guid+'");');
 
 	var showCustomEvalDiv = document.createElement('div');
 	showCustomEvalDiv.setAttribute('id', 'ShowCustomEval_'+(currentNumberMappings+1)+'_'+guid);
@@ -1159,6 +1189,7 @@ function AddMapping(guid, numMappings){
 	customEvalTextInput.setAttribute('rows','10');
 	customEvalTextInput.setAttribute('id','inputCustomEval_'+(currentNumberMappings+1)+'_'+guid);
 	customEvalTextInput.setAttribute('name','inputCustomEval_'+(currentNumberMappings+1)+'_'+guid);
+	customEvalTextInput.setAttribute('onkeyup','queryAjaxLiveDataServiceForNewColValueManyToOne("'+(currentNumberMappings+1)+'", "'+guid+'");');
 
 	var linebreak = document.createElement('br');
 
@@ -1168,11 +1199,18 @@ function AddMapping(guid, numMappings){
 	var ValTableRow = document.createElement("tr");
 	var valTableCell1 = document.createElement("td");
 	var valTableCell2 = document.createElement("td");
+	var valTableCell3 = document.createElement("td");
 	//setup a div 
 	var valDiv = document.createElement("div");
 	valDiv.setAttribute("id", 'DisplayValue_'+(currentNumberMappings+1)+'_'+guid);
 	valDiv.setAttribute("name", 'DisplayValue_'+(currentNumberMappings+1)+'_'+guid);
 	valDiv.setAttribute("style","color:red;");
+	//ajax loading image
+	var ajaxImage = document.createElement('img');
+	ajaxImage.setAttribute('src','images/loader.gif');
+	ajaxImage.setAttribute('id','liveDataLoader_'+(currentNumberMappings+1)+'_'+guid);
+	ajaxImage.setAttribute('name','liveDataLoader_'+(currentNumberMappings+1)+'_'+guid);
+	ajaxImage.setAttribute('style','display:none;');
 
 	listOfMappingsDiv.appendChild(mappingNumber);
 	listOfMappingsDiv.appendChild(inputColNumDiv);
@@ -1183,6 +1221,8 @@ function AddMapping(guid, numMappings){
 				valTableCell1.appendChild(inputColNumInput);
 			ValTableRow.appendChild(valTableCell2);
 				valTableCell2.appendChild(valDiv);
+			ValTableRow.appendChild(valTableCell3);
+				valTableCell3.appendChild(ajaxImage);
 	listOfMappingsDiv.appendChild(inputInputFunction);
 		inputInputFunction.appendChild(inputFunctionOpt1);
 		inputInputFunction.appendChild(inputFunctionOpt2);
@@ -1226,4 +1266,15 @@ function getColumnValueFromFirstRowOfFile(columnNumber){
 	var values = firstRow.split(",");
 
 	return values[columnNumber];
+}
+function trim(str,chars){
+    return ltrim(rtrim(str,chars),chars);
+}
+function ltrim(str,chars){
+    chars=chars||'\\s';
+    return str.replace(new RegExp("^["+chars+"]+","g"),"");
+}
+function rtrim(str,chars){
+    chars=chars||'\\s';
+    return str.replace(new RegExp("["+chars+"]+$","g"),"");
 }

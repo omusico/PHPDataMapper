@@ -34,6 +34,22 @@ function HidePrepareFileGreenTick(){
 	document.getElementById('GreenTickFileLoader').style.display = 'none';
 }
 
+function ShowDynFilePrevLoader(guid, isManyToOne, mappingNo){
+	if(isManyToOne){
+		document.getElementById('liveDataLoader_'+mappingNo+'_'+guid).style.display = '';
+	}else{
+		document.getElementById('liveDataLoader_'+guid).style.display = '';
+	}
+}
+
+function HideDynFilePrevLoader(guid, isManyToOne, mappingNo){
+	if(isManyToOne){
+		document.getElementById('liveDataLoader_'+mappingNo+'_'+guid).style.display = 'none';
+	}else{
+		document.getElementById('liveDataLoader_'+guid).style.display = 'none';
+	}
+}
+
 function RetrieveListOfDataBases(){
 	var serverAddress = document.getElementById('DataBaseServerAddress').value;
 	var username = document.getElementById('DataBaseUserName').value;
@@ -147,6 +163,69 @@ function PrepareInputFileForForm(){
 			}
 			HideLoadingPrepareFile();
 			ShowPrepareFileGreenTick();
+	});
+}
+
+function queryAjaxLiveDataServiceForNewColValue(guid){
+	document.getElementById("DisplayValue_"+guid).value = "";
+
+	ShowDynFilePrevLoader(guid, false, 0);
+
+	//function, inputColNum, inputColValue, char, subStrStart, subStrLength, customEvalTxt\
+	var inputColNum = document.getElementById("inputColumnNumber_"+guid).value;
+	var fnc = document.getElementById("inputFunction_"+guid).value;
+	var inputColValue = getColumnValueFromFirstRowOfFile(inputColNum);
+	var chr = document.getElementById("inputCharNum_"+guid).value;
+	var subStrStart = document.getElementById("inputSubStart_"+guid).value;
+	var subStrLength = document.getElementById("inputSubLength_"+guid).value;
+	var customEvalTxt = document.getElementById("inputCustomEval_"+guid).value;
+
+	doTheAjaxQueryLiveDate(guid, fnc, inputColNum, inputColValue, chr, subStrStart, subStrLength, customEvalTxt, false, 0);
+}
+function queryAjaxLiveDataServiceForNewColValueManyToOne(mappingNum, guid){
+	document.getElementById("DisplayValue_"+mappingNum+"_"+guid).value = "";
+			
+	ShowDynFilePrevLoader(guid, true, mappingNum);
+
+	//function, inputColNum, inputColValue, char, subStrStart, subStrLength, customEvalTxt\
+	var inputColNum = document.getElementById("inputColumnNumber_"+mappingNum+"_"+guid).value;
+	var fnc = document.getElementById("inputFunction_"+mappingNum+"_"+guid).value;
+	var inputColValue = getColumnValueFromFirstRowOfFile(inputColNum);
+	var chr = document.getElementById("inputCharNum_"+mappingNum+"_"+guid).value;
+	var subStrStart = document.getElementById("inputSubStart_"+mappingNum+"_"+guid).value;
+	var subStrLength = document.getElementById("inputSubLength_"+mappingNum+"_"+guid).value;
+	var customEvalTxt = document.getElementById("inputCustomEval_"+mappingNum+"_"+guid).value;
+
+	doTheAjaxQueryLiveDate(guid, fnc, inputColNum, inputColValue, chr, subStrStart, subStrLength, customEvalTxt, true, mappingNum);
+}
+
+function doTheAjaxQueryLiveDate(guid, func, inputColNum, inputColValue, chr, subStrStart, subStrLength, customEvalTxt, isManyToOne, mappingNum){
+	$.ajax({
+		  type: "POST",
+		  asynch: false,
+		  url: "AjaxLiveDataService/inputColumns.php",
+		  data: { 	 
+		  			inputFunction: func, 
+		  			inputColNum: inputColNum, 
+		  			inputColVal: inputColValue,
+		  			chr: chr, 
+		  			subStringStart: subStrStart, 
+		  			subStringLength: subStrLength, 
+		  			customEvalText: customEvalTxt
+		  		}
+		}).done(function( msg ) {
+			if(msg.indexOf("<b>Parse error") != -1){
+				msg = "...";
+			}
+			
+			if(isManyToOne){
+				document.getElementById("DisplayValue_"+mappingNum+"_"+guid).innerHTML = msg;
+			}else{
+				document.getElementById("DisplayValue_"+guid).innerHTML = msg;
+			}
+
+			HideDynFilePrevLoader(guid, isManyToOne, mappingNum);
+	
 	});
 }
 

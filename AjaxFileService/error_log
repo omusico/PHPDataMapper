@@ -1,0 +1,6 @@
+[02-Jun-2012 06:50:01] PHP Fatal error:  Cannot redeclare class iReader in /home/lachlanp/public_html/datamapper/Mapping/iReaderWriter.php on line 3
+[03-Jun-2012 21:00:24] PHP Warning:  XMLReader::read() [<a href='xmlreader.read'>xmlreader.read</a>]: /home/lachlanp/public_html/datamapper/data1.xls:1: parser error : Document is empty in /home/lachlanp/public_html/datamapper/Mapping/XMLDataReader.php on line 47
+[03-Jun-2012 21:00:24] PHP Warning:  XMLReader::read() [<a href='xmlreader.read'>xmlreader.read</a>]: ÐÏà¡±á in /home/lachlanp/public_html/datamapper/Mapping/XMLDataReader.php on line 47
+[03-Jun-2012 21:00:24] PHP Warning:  XMLReader::read() [<a href='xmlreader.read'>xmlreader.read</a>]: ^ in /home/lachlanp/public_html/datamapper/Mapping/XMLDataReader.php on line 47
+[03-Jun-2012 21:00:24] PHP Warning:  XMLReader::read() [<a href='xmlreader.read'>xmlreader.read</a>]: An Error Occured while reading in /home/lachlanp/public_html/datamapper/Mapping/XMLDataReader.php on line 47
+[03-Jun-2012 21:00:24] PHP Warning:  Invalid argument supplied for foreach() in /home/lachlanp/public_html/datamapper/AjaxFileService/ajaxFileService.php on line 15
