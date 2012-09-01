@@ -1,12 +1,17 @@
 <?php
+include "iReaderWriter.php";
 include "XMLDataWriter.php";
 include "XMLDataReader.php";
 include "TXTDataWriter.php";
 include "TXTDataReader.php";
 include "CSVDataReader.php";
 include "CSVDataWriter.php";
+include "XLSDataWriter.php";
+include "XLSDataReader.php";
 include "DataClass.php";
 include "Mappings.php";
+include "PHPExcelClasses/PHPExcel.php";
+
 
 class MappingProcessor{
 
@@ -44,6 +49,12 @@ class MappingProcessor{
 			$txtdr = new TXTDataReader($this->dataFile);
 
 			$this->dataFileClass = $txtdr->data;
+
+		}else if($this->fileType == "xls"){
+			$xlsdr = new XLSDataReader($this->dataFile);
+
+			$this->dataFileClass = $xlsdr->data;
+
 		}
 	}
 
@@ -69,16 +80,16 @@ class MappingProcessor{
 				case "substr":
 					$newValue = substr( $existingColumnValue, 
 										$mapping->ProcessColumn->subStringStart, 
-										$mapping->ProcessColumn->subStringStart + $mapping->ProcessColumn->subStringEnd 
+										$mapping->ProcessColumn->subStringLength 
 										);
-					
+										
 					$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newValue;
 
 					break;
 				case "char":
 					$newValue = substr( $existingColumnValue, 
 										$mapping->ProcessColumn->characterNumber, 
-										$mapping->ProcessColumn->characterNumber
+										1
 										);
 					
 					$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newValue;
@@ -131,13 +142,13 @@ class MappingProcessor{
 					case "substr":
 						$newValue = substr( $existingColumnValue, 
 											$mapping->ProcessColumns[$k]->subStringStart, 
-											$mapping->ProcessColumns[$k]->subStringStart + $mapping->ProcessColumns[$k]->subStringEnd 
+											$mapping->ProcessColumns[$k]->subStringLength 
 											);
 						break;
 					case "char":
 						$newValue = substr( $existingColumnValue, 
 											$mapping->ProcessColumns[$k]->characterNumber, 
-											$mapping->ProcessColumns[$k]->characterNumber
+											1
 											);
 					case "direct":
 						$newValue = $existingColumnValue;
@@ -166,9 +177,6 @@ class MappingProcessor{
 
 			for($m=0; $m<count($concatChars); $m++){
 				//if the first and last characters are " then this is part of the string.
-
-
-
 				if(
 					(substr($concatChars[$m], 0, 0) == "\"")|| 
 					(substr($concatChars[$m], (strlen($concatChars[$m]) - 1), (strlen($concatChars[$m]) - 1)) == "\""))
@@ -195,18 +203,19 @@ class MappingProcessor{
 
 	public function writeDataToFile(){
 		if($this->outputFileType == "xml"){
-			$xmldw = new XMLDataWriter($dataFile);   
-
+			$xmldw = new XMLDataWriter($this->outputFileName, $this->outputDataFileClass);   
+			$xmldw->writeToFile();
 			
 		}else if($this->outputFileType == "csv"){
-			echo "writer";
 			$csvdw = new CSVDataWriter($this->outputFileName, $this->outputDataFileClass);
 			$csvdw->writeToFile();
 
 		}else if($this->outputFileType == "txt"){
-			echo "writer";
 			$txtdw = new TXTDataWriter($this->outputFileName, $this->outputDataFileClass);
 			$txtdw->writeToFile();
+		}else if($this->outputFileType == "xls"){
+			$xlsdw = new XLSDataWriter($this->outputFileName, $this->outputDataFileClass);
+			$xlsdw->writeToFile();
 		}
 	}
 }

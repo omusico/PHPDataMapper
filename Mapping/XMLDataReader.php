@@ -1,41 +1,18 @@
 <?php
 
-class XMLDataReader{
+class XMLDataReader implements iReader{
 	//Read from different types of data sources
 
 	//In an xml file e.g.
-	//<customer>           <-- The row
-	//   	<name>         <-- A column
-	//   	<age>          <-- Another column
-	//		<cardnumber>   <-- Another column
-	//</customer>       
+	//<customers>
+	//		<customer>           <-- The row
+	//   		<name>         <-- A column
+	//   		<age>          <-- Another column
+	//			<cardnumber>   <-- Another column
+	//		</customer>       
+	//</customers>
 
 	//As an associative array
-	// Array
-	// (
-	// 	[0] => Array
-	// 	(
-	// 		[tag] => customer
-	// 		[value] = > Array
-	// 			(
-	// 				[0] => Array
-	// 					(
-	// 						[tag] => name
-	// 						[value] => John
-	// 					)
-	// 				[1] => Array
-	// 					(
-	// 						[tag] => age
-	// 						[value] => 16
-	// 					)
-	// 				[2] => Array
-	// 					(
-	// 						[tag] => cardnumber
-	// 						[value] => 16253498
-	// 					)
-	// 			)
-	// 	)
-	// )
 
 	public $data;
 
@@ -47,22 +24,42 @@ class XMLDataReader{
 		$xml->open($fileName);
 
 		//put it into an associative array
-		$assoc = xml2assoc($xml);
+		$assoc = $this->xml2assoc($xml);
 		
 		//put it into our generic DataClass
-		for($i=0; $i<size($assoc); $i++)
+		for($i=0; $i<count($assoc[0]["value"]); $i++)
 		{
 			//make a new row
 			$r = new Row();
 
-			for($j=0; $j<size($assoc[$i]); $j++)
+			for($j=0; $j<count($assoc[0]["value"][0]["value"]); $j++)
 			{
-				$r->values[$j] = $assoc[$i][$j];
+				$r->values[$j] = $assoc[0]["value"][$i]["value"][$j]["value"];
 			}
 
-			$data->rows[$i] = $r;
+			$this->data->rows[$i] = $r;
 		}
 	}
+
+
+	function xml2assoc($xml) { 
+	    $tree = null; 
+	    while($xml->read()) 
+	        switch ($xml->nodeType) { 
+	            case XMLReader::END_ELEMENT: return $tree; 
+	            case XMLReader::ELEMENT: 
+	                $node = array('tag' => $xml->name, 'value' => $xml->isEmptyElement ? '' : $this->xml2assoc($xml)); 
+	                if($xml->hasAttributes) 
+	                    while($xml->moveToNextAttribute()) 
+	                        $node['attributes'][$xml->name] = $xml->value; 
+	                $tree[] = $node; 
+	            break; 
+	            case XMLReader::TEXT: 
+	            case XMLReader::CDATA: 
+	                $tree .= $xml->value; 
+	        } 
+	    return $tree; 
+	} 
 }
 
 ?>

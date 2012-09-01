@@ -1,7 +1,8 @@
 <?php
-	include "PHPExcelClasses/PHPExcel/Reader/CSV.php";
 
-	class CSVDataReader implements iReader{
+	include "PHPExcelClasses/PHPExcel/Reader/Excel5.php";
+
+	class XLSDataReader implements iReader{
 		//Read from a CSV data file
 		//A standard csv file
 		//read using PHPExcel
@@ -10,10 +11,8 @@
 		function __construct($fileName){
 			$this->data = new DataClass();
 
-			$objReader = new PHPExcel_Reader_CSV();
-			$objReader->setDelimiter(';');
-			$objReader->setEnclosure("");
-			$objReader->setLineEnding("\r\n");
+			$objReader = new PHPExcel_Reader_Excel5();
+
 			$objPHPExcel = $objReader->load($fileName);
 		
 			foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
@@ -36,7 +35,7 @@
 				}
 			}
 
-			
+			print_r($this->data);
 		}
 	}
 

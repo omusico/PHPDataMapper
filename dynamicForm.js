@@ -20,7 +20,6 @@ function showOptions(dropdown){
 		document.getElementById('ShowCharacterOption_'+guid).style.display = 'none';
 		document.getElementById('ShowSubStringOption_'+guid).style.display = 'none';
 		document.getElementById('ShowCustomEval_'+guid).style.display = '';
-		
 	}
 }
 
@@ -53,7 +52,7 @@ function deleteOneToOne(guid){
 	var outputColNum = document.getElementById('outputColumnNumber_'+guid);
 	var inputCharNum = document.getElementById('inputCharNum_'+guid);
 	var inputSubStart = document.getElementById('inputSubStart_'+guid);
-	var inputSubEnd = document.getElementById('inputSubEnd_'+guid);
+	var inputSubLength = document.getElementById('inputSubLength_'+guid);
 
 	var table = document.getElementById('OneToOneTable_'+guid);
 	
@@ -62,7 +61,7 @@ function deleteOneToOne(guid){
 	outputColNum.disabled = true;
 	inputCharNum.disabled = true;
 	inputSubStart.disabled = true;
-	inputSubEnd.disabled = true;
+	inputSubLength.disabled = true;
 
 	table.style.display = 'none'
 
@@ -76,13 +75,13 @@ function deleteManyToOne(guid){
 		var inputFn = document.getElementById('inputFunction_'+i+'_'+guid);
 		var inputCharNum = document.getElementById('inputCharNum_'+i+'_'+guid);
 		var inputSubStart = document.getElementById('inputSubStart_'+i+'_'+guid);
-		var inputSubEnd = document.getElementById('inputSubEnd_'+i+'_'+guid);
+		var inputSubLength = document.getElementById('inputSubLength_'+i+'_'+guid);
 
 		inputColNum.disabled = true;
 		inputFn.disabled = true;
 		inputCharNum.disabled = true;
 		inputSubStart.disabled = true;
-		inputSubEnd.disabled = true;
+		inputSubLength.disabled = true;
 	}
 
 	var table = document.getElementById('ManyToOneTable_'+guid);
@@ -125,10 +124,10 @@ function getOneToOneMappingHTML(){
 
 	document.getElementById("guidList").value += guid+",1:1;";
 
-	var html =  "<table id='OneToOneTable_"+guid+"' border='1'>"+
+	var html =  "<table width='800' id='OneToOneTable_"+guid+"' border='1'>"+
 					"<tr>"+
-						"<td valign='top'>"+
-							"Input column number: <input id='inputColumnNumber_"+guid+"' name='inputColumnNumber_"+guid+"'  type='text'></input><br/>"+
+						"<td style='border:0px;' valign='top'>"+
+							"Input column number: <input id='inputColumnNumber_"+guid+"' name='inputColumnNumber_"+guid+"' size='3' type='text'></input><br/>"+
 							"<select id='inputFunction_"+guid+"' name='inputFunction_"+guid+"' onchange='javascript:showOptions(this);'>"+
 								"<option value='--'>--Choose a function--</option>"+
 								"<option value='char'>character</option>"+
@@ -137,24 +136,24 @@ function getOneToOneMappingHTML(){
 								"<option value='eval'>custom evaluation</option>"+
 							"</select><br/>"+
 							"<div id='ShowCharacterOption_"+guid+"' style='display:none;'>"+
-							"character <input type='text' id='inputCharNum_"+guid+"' name='inputCharNum_"+guid+"'></input><br/>"+
+							"character <input size='3' type='text' id='inputCharNum_"+guid+"' name='inputCharNum_"+guid+"'></input><br/>"+
 							"</div>"+
 							"<div id='ShowSubStringOption_"+guid+"' style='display:none;'>"+
 							"substring<br/>"+
-							"start <input type='text' id='inputSubStart_"+guid+"' name='inputSubStart_"+guid+"'></input><br/>"+
-							"end <input type='text' id='inputSubEnd_"+guid+"' name='inputSubEnd_"+guid+"'></input>"+
+							"start <input size='3' type='text' id='inputSubStart_"+guid+"' name='inputSubStart_"+guid+"'></input><br/>"+
+							"length <input size='3' type='text' id='inputSubLength_"+guid+"' name='inputSubLength_"+guid+"'></input>"+
 							"</div>"+
 							"<div id='ShowCustomEval_"+guid+"' style='display:none;'>"+
 							"Use the variable '#ColValue' in place of column value.<br/>"+
 							"<textarea cols='35' rows='10' id='inputCustomEval_"+guid+"' name='inputCustomEval_"+guid+"'> </textarea>"+
 							"</div>"+
 						"</td>"+
-						"<td>-------></td>"+
-						"<td valign='top'>"+
-							"Output column number: <input id='outputColumnNumber_"+guid+"' name='outputColumnNumber_"+guid+"' type='text'></input>"+
+						"<td style='border:0px;'><img src='images/arrow.png' /></td>"+
+						"<td style='border:0px;' >"+
+							"Output column number: <input size='3' id='outputColumnNumber_"+guid+"' name='outputColumnNumber_"+guid+"' type='text'></input>"+
 						"</td>"+
-						"<td valign='top'>"+
-							"<a href='javascript:void(0);'  onclick=\"javascript:deleteOneToOne('"+guid+"')\"><img border='0' src='images/delete.png' /></a>"+
+						"<td style='border:0px;' valign='top' align='right'>"+
+							"<a href='javascript:void(0);'   onclick=\"javascript:deleteOneToOne('"+guid+"')\"><img border='0' src='images/delete.png' /></a>"+
 						"</td>"+
 					"</tr>"+
 				"</table>";
@@ -167,13 +166,13 @@ function getManyToOneMappingHTML(){
 
 	document.getElementById("guidList").value += guid+",many:1;";
 
-	var html =  "<table id='ManyToOneTable_"+guid+"' border='1'>"+
+	var html =  "<table width='800' id='ManyToOneTable_"+guid+"' border='1'>"+
 					"<tr>"+
-						"<td valign='top'>"+
+						"<td style='border:0px;' valign='top'>"+
 							"<div id='ListOfMappings_"+guid+"'>"+
 							"<input type='hidden' id='numMappings_"+guid+"' name='numMappings_"+guid+"' value='1' ></input>"+
 							"<b>1</b><br/>"+
-							"Input column number: <input id='inputColumnNumber_1_"+guid+"' name='inputColumnNumber_1_"+guid+"' type='text'></input><br/>"+
+							"Input column number: <input id='inputColumnNumber_1_"+guid+"' size='3' name='inputColumnNumber_1_"+guid+"' type='text'></input><br/>"+
 							"<select id='inputFunction_1_"+guid+"' name='inputFunction_1_"+guid+"' onchange='javascript:showOptionsManyToOne(this,1);'>"+
 								"<option value='--'>--Choose a function--</option>"+
 								"<option value='char'>character</option>"+
@@ -183,12 +182,12 @@ function getManyToOneMappingHTML(){
 							"</select><br/>"+
 
 							"<div id='ShowCharacterOption_1_"+guid+"' style='display:none;'>"+
-								"character <input type='text' id='inputCharNum_1_"+guid+"' name='inputCharNum_1_"+guid+"'></input><br/>"+
+								"character <input size='3' type='text' id='inputCharNum_1_"+guid+"' name='inputCharNum_1_"+guid+"'></input><br/>"+
 							"</div>"+
 							"<div id='ShowSubStringOption_1_"+guid+"' style='display:none;'>"+
 								"substring<br/>"+
-								"start <input type='text' id='inputSubStart_1_"+guid+"' name='inputSubStart_1_"+guid+"'></input><br/>"+
-								"end <input type='text' id='inputSubEnd_1_"+guid+"' name='inputSubEnd_1_"+guid+"'></input>"+
+								"start <input size='3' type='text' id='inputSubStart_1_"+guid+"' name='inputSubStart_1_"+guid+"'></input><br/>"+
+								"length <input size='3' type='text' id='inputSubLength_1_"+guid+"' name='inputSubLength_1_"+guid+"'></input>"+
 							"</div>"+
 							
 							"<div id='ShowCustomEval_1_"+guid+"' style='display:none;'>"+
@@ -200,13 +199,13 @@ function getManyToOneMappingHTML(){
 							"<div id='AddAnotherLink_"+guid+"'>"+
 							"</div>"+
 						"</td>"+
-						"<td>-------></td>"+
-						"<td valign='top'>"+
-							"Output column number: <input id='outputColumnNumber_"+guid+"' name='outputColumnNumber_"+guid+"' type='text'></input><br/>"+
-							"Concatenation: <input id='outputColumnOrder_"+guid+"' name='outputColumnOrder_"+guid+"' type='text'></input>"+
+						"<td style='border:0px;'><img src='images/arrow.png' /></td>"+
+						"<td style='border:0px;' >"+
+							"Output column number: <input size='3' id='outputColumnNumber_"+guid+"' name='outputColumnNumber_"+guid+"' type='text'></input><br/>"+
+							"Concatenation: <input size='15' id='outputColumnOrder_"+guid+"' name='outputColumnOrder_"+guid+"' type='text'></input>"+
 						"</td>"+
 
-						"<td valign='top'>"+
+						"<td style='border:0px;' valign='top' align='right'>"+
 							"<a href='javascript:void(0);' onclick=\"javascript:deleteManyToOne('"+guid+"')\"><img border='0' src='images/delete.png' /></a>"+
 						"</td>"+
 					"</tr>"+
@@ -227,7 +226,7 @@ function AddMapping(guid, numMappings){
 	document.getElementById("numMappings_"+guid).value = currentNumberMappings+1;
 
 	var html =  "<br/><b>"+(currentNumberMappings+1)+"</b><br/>"+
-				"Input column number: <input id='inputColumnNumber_"+(currentNumberMappings+1)+"_"+guid+"' name='inputColumnNumber_"+(currentNumberMappings+1)+"_"+guid+"' type='text'></input><br/>"+
+				"Input column number: <input size='3' id='inputColumnNumber_"+(currentNumberMappings+1)+"_"+guid+"' name='inputColumnNumber_"+(currentNumberMappings+1)+"_"+guid+"' type='text'></input><br/>"+
 				"<select id='inputFunction_"+(currentNumberMappings+1)+"_"+guid+"' name='inputFunction_"+(currentNumberMappings+1)+"_"+guid+"' onchange='javascript:showOptionsManyToOne(this, "+(currentNumberMappings+1)+");'>"+
 					"<option value='--'>--Choose a function--</option>"+
 					"<option value='char'>character</option>"+
@@ -237,12 +236,12 @@ function AddMapping(guid, numMappings){
 				"</select><br/>"+
 
 				"<div id='ShowCharacterOption_"+(currentNumberMappings+1)+"_"+guid+"' style='display:none;'>"+
-					"character <input type='text' id='inputCharNum_"+(currentNumberMappings+1)+"_"+guid+"' name='inputCharNum_"+(currentNumberMappings+1)+"_"+guid+"'></input><br/>"+
+					"character <input size='3' type='text' id='inputCharNum_"+(currentNumberMappings+1)+"_"+guid+"' name='inputCharNum_"+(currentNumberMappings+1)+"_"+guid+"'></input><br/>"+
 				"</div>"+
 				"<div id='ShowSubStringOption_"+(currentNumberMappings+1)+"_"+guid+"' style='display:none;'>"+
 					"substring<br/>"+
-					"start <input type='text' id='inputSubStart_"+(currentNumberMappings+1)+"_"+guid+"' name='inputSubStart_"+(currentNumberMappings+1)+"_"+guid+"'></input><br/>"+
-					"end <input type='text' id='inputSubEnd_"+(currentNumberMappings+1)+"_"+guid+"' name='inputSubEnd_"+(currentNumberMappings+1)+"_"+guid+"'></input>"+
+					"start <input size='3' type='text' id='inputSubStart_"+(currentNumberMappings+1)+"_"+guid+"' name='inputSubStart_"+(currentNumberMappings+1)+"_"+guid+"'></input><br/>"+
+					"length <input size='3' type='text' id='inputSubLength_"+(currentNumberMappings+1)+"_"+guid+"' name='inputSubLength_"+(currentNumberMappings+1)+"_"+guid+"'></input>"+
 				"</div>"+
 				"<div id='ShowCustomEval_"+(currentNumberMappings+1)+"_"+guid+"' style='display:none;'>"+
 					"Use the variable '#ColValue' in place of column value.<br/>"+

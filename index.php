@@ -20,6 +20,7 @@
                 <option value='txt'>*.txt</option>
                 <option value='csv'>*.csv</option>
                 <option value='xml'>*.xml</option>
+                <option value='xls'>*.xls</option>
             </select>
         </td>
     </tr>
@@ -31,6 +32,7 @@
                 <option value='txt'>*.txt</option>
                 <option value='csv'>*.csv</option>
                 <option value='xml'>*.xml</option>
+                <option value='xls'>*.xls</option>
             </select>
         </td>
     </tr>

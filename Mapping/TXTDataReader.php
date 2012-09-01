@@ -1,5 +1,6 @@
 <?php
-	class TXTDataReader{
+
+	class TXTDataReader implements iReader{
 		//Read from a text document
 
 		//A text file with column names at top

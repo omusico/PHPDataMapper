@@ -1,6 +1,6 @@
 <?php
 
-	class TXTDataWriter{
+	class TXTDataWriter implements iWriter{
 		
 		public $handle;
 		public $dataClass;
@@ -30,7 +30,7 @@
 				$rowValue = rtrim($rowValue, "|");
 
 				//add new line
-				//$rowValue = $rowValue."\r\n";
+				$rowValue = $rowValue."\r\n";
 
 				fwrite($this->handle, $rowValue);
 			}

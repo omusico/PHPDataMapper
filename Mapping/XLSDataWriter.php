@@ -1,8 +1,8 @@
 <?php
-	include "PHPExcelClasses/PHPExcel/Writer/CSV.php";
+	include "PHPExcelClasses/PHPExcel/Writer/Excel5.php";
 
 
-	class CSVDataWriter implements iWriter{
+	class XLSDataWriter implements iWriter{
 		//Write from a CSV data file
 		public $handle;
 		public $dataClass;
@@ -13,9 +13,6 @@
 
 			$this->fileName = $fileName;
 			$this->dataClass = $dataClass;
-
-
-
 		}
 
 		//Write to a text data file
@@ -25,11 +22,7 @@
 
 			$objPHPExcel = new PHPExcel();
 			
-			$objWriter = new PHPExcel_Writer_CSV($objPHPExcel);
-			$objWriter->setDelimiter(';');
-			$objWriter->setEnclosure("");
-			$objWriter->setLineEnding("\r\n");
-			$objWriter->setSheetIndex(0);
+			$objWriter = new PHPExcel_Writer_Excel5($objPHPExcel);
 			
 			$alphabet = array("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","Y","X","Z");
 

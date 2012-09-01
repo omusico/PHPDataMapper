@@ -29,16 +29,16 @@
 		public $fnction;
 		public $characterNumber;
 		public $subStringStart;
-		public $subStringEnd;
+		public $subStringLength;
 		public $customEvaluation;
 
-		function __construct($columnNumber, $fnction, $characterNumber, $subStringStart, $subStringEnd, $customEvaluation)
+		function __construct($columnNumber, $fnction, $characterNumber, $subStringStart, $subStringLength, $customEvaluation)
 		{
 			$this->columnNumber = $columnNumber;
 			$this->fnction = $fnction;
 			$this->characterNumber = $characterNumber;
 			$this->subStringStart = $subStringStart;
-			$this->subStringEnd = $subStringEnd;
+			$this->subStringLength = $subStringLength;
 			$this->customEvaluation = $customEvaluation;
 		}
 	}
