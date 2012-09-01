@@ -983,6 +983,7 @@ function getManyToOneMappingHTML(){
 	concatenationInput.setAttribute('id','outputColumnOrder_'+guid);
 	concatenationInput.setAttribute('name','outputColumnOrder_'+guid);
 	concatenationInput.setAttribute('type','text');
+	concatenationInput.setAttribute('onkeyup', 'queryAjaxLiveDataServiceForConcat("'+guid+'");')
 
 
 	var cell4 = document.createElement('td');
@@ -1018,6 +1019,18 @@ function getManyToOneMappingHTML(){
 	ajaxImage.setAttribute('id','liveDataLoader_1_'+guid);
 	ajaxImage.setAttribute('name','liveDataLoader_1_'+guid);
 	ajaxImage.setAttribute('style','display:none;');
+
+	//setup a div 
+	var valDiv2 = document.createElement("div");
+	valDiv2.setAttribute("id", "DisplayValueConcat_"+guid);
+	valDiv2.setAttribute("name", "DisplayValueConcat_"+guid);
+	valDiv2.setAttribute("style","color:red;");
+	//ajax loading image
+	var ajaxImage2 = document.createElement('img');
+	ajaxImage2.setAttribute('src','images/loader.gif');
+	ajaxImage2.setAttribute('id','liveDataLoaderConcat_'+guid);
+	ajaxImage2.setAttribute('name','liveDataLoaderConcat_'+guid);
+	ajaxImage2.setAttribute('style','display:none;');
 
 	//compose the HTML document elements using appendChild.
 	table.appendChild(row1);
@@ -1078,6 +1091,8 @@ function getManyToOneMappingHTML(){
 
 			cell3.appendChild(concatenationDiv);
 			cell3.appendChild(concatenationInput);
+			cell3.appendChild(valDiv2);
+			cell3.appendChild(ajaxImage2);
 
 		row1.appendChild(cell4);
 			cell4.appendChild(cell4AHref);

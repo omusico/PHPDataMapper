@@ -538,7 +538,8 @@ try{
     echo "Processing complete. <a href='index.php'>Click here to process another file</a>";
 
 }catch(Exception $e){
-	throw new Exception("Error processing.");
+	throw new Exception("Error processing.<br>");
+	echo $e;
 }
 ?>
 </body>

@@ -49,7 +49,14 @@ function HideDynFilePrevLoader(guid, isManyToOne, mappingNo){
 		document.getElementById('liveDataLoader_'+guid).style.display = 'none';
 	}
 }
-
+function ShowConcatValuePrevLoader(guid){
+	document.getElementById("DisplayValueConcat_"+guid).style.display = "none";
+	document.getElementById("liveDataLoaderConcat_"+guid).style.display = "";
+}
+function HideConcatValuePrevLoader(guid){
+	document.getElementById("DisplayValueConcat_"+guid).style.display = "";
+	document.getElementById("liveDataLoaderConcat_"+guid).style.display = "none";
+}
 function RetrieveListOfDataBases(){
 	var serverAddress = document.getElementById('DataBaseServerAddress').value;
 	var username = document.getElementById('DataBaseUserName').value;
@@ -180,7 +187,7 @@ function queryAjaxLiveDataServiceForNewColValue(guid){
 	var subStrLength = document.getElementById("inputSubLength_"+guid).value;
 	var customEvalTxt = document.getElementById("inputCustomEval_"+guid).value;
 
-	doTheAjaxQueryLiveDate(guid, fnc, inputColNum, inputColValue, chr, subStrStart, subStrLength, customEvalTxt, false, 0);
+	doTheAjaxQueryLiveData(guid, fnc, inputColNum, inputColValue, chr, subStrStart, subStrLength, customEvalTxt, false, 0);
 }
 function queryAjaxLiveDataServiceForNewColValueManyToOne(mappingNum, guid){
 	document.getElementById("DisplayValue_"+mappingNum+"_"+guid).value = "";
@@ -196,10 +203,10 @@ function queryAjaxLiveDataServiceForNewColValueManyToOne(mappingNum, guid){
 	var subStrLength = document.getElementById("inputSubLength_"+mappingNum+"_"+guid).value;
 	var customEvalTxt = document.getElementById("inputCustomEval_"+mappingNum+"_"+guid).value;
 
-	doTheAjaxQueryLiveDate(guid, fnc, inputColNum, inputColValue, chr, subStrStart, subStrLength, customEvalTxt, true, mappingNum);
+	doTheAjaxQueryLiveData(guid, fnc, inputColNum, inputColValue, chr, subStrStart, subStrLength, customEvalTxt, true, mappingNum);
 }
 
-function doTheAjaxQueryLiveDate(guid, func, inputColNum, inputColValue, chr, subStrStart, subStrLength, customEvalTxt, isManyToOne, mappingNum){
+function doTheAjaxQueryLiveData(guid, func, inputColNum, inputColValue, chr, subStrStart, subStrLength, customEvalTxt, isManyToOne, mappingNum){
 	$.ajax({
 		  type: "POST",
 		  asynch: false,
@@ -225,6 +232,36 @@ function doTheAjaxQueryLiveDate(guid, func, inputColNum, inputColValue, chr, sub
 			}
 
 			HideDynFilePrevLoader(guid, isManyToOne, mappingNum);
+			queryAjaxLiveDataServiceForConcat(guid);
+	
+	});
+}
+
+function queryAjaxLiveDataServiceForConcat(guid){
+	ShowConcatValuePrevLoader(guid);
+
+	var numProcesses = document.getElementById("numMappings_"+guid).value;
+	var ajaxPostValue = "";
+	for(var i=1; i<=numProcesses; i++){
+		var currVal = document.getElementById("DisplayValue_"+i+"_"+guid).innerHTML;
+		ajaxPostValue += currVal+",";
+	}
+	ajaxPostValue = rtrim(ajaxPostValue,",");
+	
+	var concatStringValue = document.getElementById('outputColumnOrder_'+guid).value;
+
+	$.ajax({
+	  type: "POST",
+	  asynch: false,
+	  url: "AjaxLiveDataService/outputStringConcat.php",
+	  data: { 	 
+	  			values: ajaxPostValue,
+	  			concat: concatStringValue
+	  		}
+	}).done(function( msg ) {
+		
+		document.getElementById("DisplayValueConcat_"+guid).innerHTML = msg;
+		HideConcatValuePrevLoader(guid);
 	
 	});
 }
