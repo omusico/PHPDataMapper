@@ -9,12 +9,10 @@
 		//the number of the 'landing' column, starting from 0
 		public $landingColumnNumber;
 
-		function __construct($ProcessColumn, $tableName, $landingColumnNumber)
-		{
-			$this->ProcessColumn = $ProcessColumn;
-			$this->tableName = $tableName;
-			$this->landingColumnNumber = $landingColumnNumber;
-		}
+		//For output to data structure
+		public $memberDestination;
+
+		public $outputToDataStructure = false;
 	}
 
 	class ManyToOne{
@@ -22,6 +20,11 @@
 		public $tableName;
 		public $landingColumnNumber;
 		public $constructedString;
+		
+		//For output to data structure
+		public $memberDestination;
+
+		public $outputToDataStructure = false;
 	}
 
 	class ProcessColumn{

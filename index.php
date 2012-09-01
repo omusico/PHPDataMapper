@@ -25,6 +25,14 @@
         </td>
     </tr>
     <tr>
+        <td colspan='2'>
+            <select onchange='javascript:SelectOutput(this);' id='MappingType' name='MappingType'>
+                <option value='ToOutputDataFile'>Map to destination file</option>
+                <option value='ToDataStructure'>Map to data structure</option>
+            </select>
+        </td>
+    </tr>
+    <tr id='outputdatafileform' name='outputdatafileform'>
         <td>Output directory / file name:</td><td><input id='OutputFileNameDir' name='OutputFileNameDir' type='text' value=''></input></td>
         <td>
             extension type
@@ -35,6 +43,8 @@
                 <option value='xls'>*.xls</option>
             </select>
         </td>
+    </tr>
+    <tr>
     </tr>
 </table>
 <div id='mappings'>

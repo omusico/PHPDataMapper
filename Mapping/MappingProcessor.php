@@ -85,6 +85,7 @@ class MappingProcessor{
 										
 					$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newValue;
 
+
 					break;
 				case "char":
 					$newValue = substr( $existingColumnValue, 
@@ -94,11 +95,13 @@ class MappingProcessor{
 					
 					$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newValue;
 
+
 					break;
 				case "direct":
 					$newValue = $existingColumnValue;
 					
 					$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newValue;
+
 
 					break;
 				case "eval":
@@ -108,7 +111,11 @@ class MappingProcessor{
 					$newValue = "";
 					eval("\$newValue = $eval");
 					
-					$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newValue;
+					if($mapping->outputToDataStructure){
+						
+					}else{
+						$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newValue;
+					}
 
 					break;
 			}

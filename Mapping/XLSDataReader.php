@@ -35,7 +35,6 @@
 				}
 			}
 
-			print_r($this->data);
 		}
 	}
 
