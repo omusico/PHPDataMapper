@@ -1,3 +1,39 @@
+function showOptions(dropdown){
+	var guid = dropdown.name.split('_')[1];
+
+	if(dropdown[dropdown.selectedIndex].value == 'char'){
+		document.getElementById('ShowCharacterOption_'+guid).style.display = '';
+		document.getElementById('ShowSubStringOption_'+guid).style.display = 'none';
+
+	}else if(dropdown[dropdown.selectedIndex].value == 'substr'){
+		document.getElementById('ShowCharacterOption_'+guid).style.display = 'none';
+		document.getElementById('ShowSubStringOption_'+guid).style.display = '';
+		
+	}else if(dropdown[dropdown.selectedIndex].value == 'direct'){
+		document.getElementById('ShowCharacterOption_'+guid).style.display = 'none';
+		document.getElementById('ShowSubStringOption_'+guid).style.display = 'none';
+		
+	}
+}
+
+function showOptionsManyToOne(dropdown, number){
+	var guid = dropdown.name.split('_')[2];
+
+	if(dropdown[dropdown.selectedIndex].value == 'char'){
+		document.getElementById('ShowCharacterOption_'+number+'_'+guid).style.display = '';
+		document.getElementById('ShowSubStringOption_'+number+'_'+guid).style.display = 'none';
+
+	}else if(dropdown[dropdown.selectedIndex].value == 'substr'){
+		document.getElementById('ShowCharacterOption_'+number+'_'+guid).style.display = 'none';
+		document.getElementById('ShowSubStringOption_'+number+'_'+guid).style.display = '';
+		
+	}else if(dropdown[dropdown.selectedIndex].value == 'direct'){
+		document.getElementById('ShowCharacterOption_'+number+'_'+guid).style.display = 'none';
+		document.getElementById('ShowSubStringOption_'+number+'_'+guid).style.display = 'none';
+		
+	}
+}
+
 function getOneToOneMappingHTML(){
 	var guid = guidGenerator();
 
@@ -11,11 +47,16 @@ function getOneToOneMappingHTML(){
 								"<option value='--'>--Choose a function--</option>"+
 								"<option value='char'>character</option>"+
 								"<option value='substr'>sub string</option>"+
+								"<option value='direct'>direct copy</option>"+
 							"</select><br/>"+
+							"<div id='ShowCharacterOption_"+guid+"' style='display:none;'>"+
 							"character <input type='text' id='inputCharNum_"+guid+"' name='inputCharNum_"+guid+"'></input><br/>"+
+							"</div>"+
+							"<div id='ShowSubStringOption_"+guid+"' style='display:none;'>"+
 							"substring<br/>"+
 							"start <input type='text' id='inputSubStart_"+guid+"' name='inputSubStart_"+guid+"'></input><br/>"+
 							"end <input type='text' id='inputSubEnd_"+guid+"' name='inputSubEnd_"+guid+"'></input>"+
+							"</div>"+
 						"</td>"+
 						"<td>-------></td>"+
 						"<td valign='top'>"+
@@ -39,15 +80,22 @@ function getManyToOneMappingHTML(){
 							"<input type='hidden' id='numMappings_"+guid+"' name='numMappings_"+guid+"' value='1' ></input>"+
 							"<b>1</b><br/>"+
 							"Input column number: <input id='inputColumnNumber_1_"+guid+"' name='inputColumnNumber_1_"+guid+"' type='text'></input><br/>"+
-							"<select id='inputFunction_1_"+guid+"' name='inputFunction_1_"+guid+"' onchange='javascript:showOptions(this);'>"+
+							"<select id='inputFunction_1_"+guid+"' name='inputFunction_1_"+guid+"' onchange='javascript:showOptionsManyToOne(this,1);'>"+
 								"<option value='--'>--Choose a function--</option>"+
 								"<option value='char'>character</option>"+
 								"<option value='substr'>sub string</option>"+
+								"<option value='direct'>direct copy</option>"+
 							"</select><br/>"+
-							"character <input type='text' id='inputCharNum_1_"+guid+"' name='inputCharNum_1_"+guid+"'></input><br/>"+
-							"substring<br/>"+
-							"start <input type='text' id='inputSubStart_1_"+guid+"' name='inputSubStart_1_"+guid+"'></input><br/>"+
-							"end <input type='text' id='inputSubEnd_1_"+guid+"' name='inputSubEnd_1_"+guid+"'></input>"+
+
+							"<div id='ShowCharacterOption_1_"+guid+"' style='display:none;'>"+
+								"character <input type='text' id='inputCharNum_1_"+guid+"' name='inputCharNum_1_"+guid+"'></input><br/>"+
+							"</div>"+
+							"<div id='ShowSubStringOption_1_"+guid+"' style='display:none;'>"+
+								"substring<br/>"+
+								"start <input type='text' id='inputSubStart_1_"+guid+"' name='inputSubStart_1_"+guid+"'></input><br/>"+
+								"end <input type='text' id='inputSubEnd_1_"+guid+"' name='inputSubEnd_1_"+guid+"'></input>"+
+							"</div>"+
+							
 							"</div>"+
 							"<div id='AddAnotherLink_"+guid+"'>"+
 							"</div>"+
@@ -76,16 +124,24 @@ function AddMapping(guid, numMappings){
 
 	var html =  "<br/><b>"+(currentNumberMappings+1)+"</b><br/>"+
 				"Input column number: <input id='inputColumnNumber_"+(currentNumberMappings+1)+"_"+guid+"' name='inputColumnNumber_"+(currentNumberMappings+1)+"_"+guid+"' type='text'></input><br/>"+
-				"<select id='inputFunction_"+(currentNumberMappings+1)+"_"+guid+"' name='inputFunction_"+(currentNumberMappings+1)+"_"+guid+"' onchange='javascript:showOptions(this);'>"+
+				"<select id='inputFunction_"+(currentNumberMappings+1)+"_"+guid+"' name='inputFunction_"+(currentNumberMappings+1)+"_"+guid+"' onchange='javascript:showOptionsManyToOne(this, "+(currentNumberMappings+1)+");'>"+
 					"<option value='--'>--Choose a function--</option>"+
 					"<option value='char'>character</option>"+
 					"<option value='substr'>sub string</option>"+
+					"<option value='direct'>direct copy</option>"+
 				"</select><br/>"+
-				"character <input type='text' id='inputCharNum_"+(currentNumberMappings+1)+"_"+guid+"' name='inputCharNum_"+(currentNumberMappings+1)+"_"+guid+"'></input><br/>"+
-				"substring<br/>"+
-				"start <input type='text' id='inputSubStart_"+(currentNumberMappings+1)+"_"+guid+"' name='inputSubStart_"+(currentNumberMappings+1)+"_"+guid+"'></input><br/>"+
-				"end <input type='text' id='inputSubEnd_"+(currentNumberMappings+1)+"_"+guid+"' name='inputSubEnd_"+(currentNumberMappings+1)+"_"+guid+"'></input>";
 
+				"<div id='ShowCharacterOption_"+(currentNumberMappings+1)+"_"+guid+"' style='display:none;'>"+
+					"character <input type='text' id='inputCharNum_"+(currentNumberMappings+1)+"_"+guid+"' name='inputCharNum_"+(currentNumberMappings+1)+"_"+guid+"'></input><br/>"+
+				"</div>"+
+				"<div id='ShowSubStringOption_"+(currentNumberMappings+1)+"_"+guid+"' style='display:none;'>"+
+					"substring<br/>"+
+					"start <input type='text' id='inputSubStart_"+(currentNumberMappings+1)+"_"+guid+"' name='inputSubStart_"+(currentNumberMappings+1)+"_"+guid+"'></input><br/>"+
+					"end <input type='text' id='inputSubEnd_"+(currentNumberMappings+1)+"_"+guid+"' name='inputSubEnd_"+(currentNumberMappings+1)+"_"+guid+"'></input>";
+				"</div>";
+
+				
+				
 	mappingsList.innerHTML += html;
 }
 

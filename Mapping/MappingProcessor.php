@@ -73,11 +73,17 @@ class MappingProcessor{
 					$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newValue;
 
 					break;
-				case "character":
+				case "char":
 					$newValue = substr( $existingColumnValue, 
 										$mapping->ProcessColumn->characterNumber, 
 										$mapping->ProcessColumn->characterNumber
 										);
+					
+					$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newValue;
+
+					break;
+				case "direct":
+					$newValue = $existingColumnValue;
 					
 					$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newValue;
 
@@ -116,11 +122,13 @@ class MappingProcessor{
 											$mapping->ProcessColumns[$k]->subStringStart + $mapping->ProcessColumns[$k]->subStringEnd 
 											);
 						break;
-					case "character":
+					case "char":
 						$newValue = substr( $existingColumnValue, 
 											$mapping->ProcessColumns[$k]->characterNumber, 
 											$mapping->ProcessColumns[$k]->characterNumber
 											);
+					case "direct":
+						$newValue = $existingColumnValue;
 						break;
 				}
 				
