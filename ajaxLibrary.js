@@ -7,6 +7,15 @@ function HideLoadingListOfDataBases(){
 	document.getElementById('ListOfDatabaseNamesContainer').style.display = '';
 }
 
+function ShowLoadingDataBaseInfo(){
+	document.getElementById('DataBaseInfoLoader').style.display = '';
+	document.getElementById('DBTableInfoContainer').style.display = 'none';
+}
+function HideLoadingDataBaseInfo(){
+	document.getElementById('DataBaseInfoLoader').style.display = 'none';
+	document.getElementById('DBTableInfoContainer').style.display = '';
+}
+
 function RetrieveListOfDataBases(){
 	var serverAddress = document.getElementById('DataBaseServerAddress').value;
 	var username = document.getElementById('DataBaseUserName').value;
@@ -94,6 +103,7 @@ function RetrieveDataBaseInformation(){
 				}
 				
 				document.getElementById('DBTableInfoContainer').appendChild(OuterTable);
+				HideLoadingDataBaseInfo();
 			}
 			
 			

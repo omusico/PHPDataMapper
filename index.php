@@ -59,12 +59,12 @@
 			<div id='ListOfDatabaseNamesContainer' name='ListOfDatabaseNamesContainer' style='display:none;'>	
 				Select Database: 	<select id='ListOfDatabaseNames' name='ListOfDatabaseNames' >
 									</select><br/>
-				<a href='javascript:void(0);' onclick='RetrieveDataBaseInformation();'>Retrieve database information for mappings</a>
+				<a href='javascript:void(0);' onclick='ShowLoadingDataBaseInfo();RetrieveDataBaseInformation();'>Retrieve database information for mappings</a>
 				<div id='DataBaseInfoLoader' name='DataBaseInfoLoader' style='display:none;'>
 					<img src='images/loader.gif' >
 				</div>
 				<input type='hidden' value='' id='TableInformation' name='TableInformation' />
-				<div id='DBTableInfoContainer' name='DBTableInfoContainer' ></div>
+				<div id='DBTableInfoContainer' name='DBTableInfoContainer' style='display:none;'></div>
  			</div>
 		</td>
     </tr>
@@ -75,7 +75,9 @@
 </div>
 <br/>
 <a href='javascript:void(0);' onclick='javascript:getOneToOneMappingHTML();'><img border='0' src='images/add11.png' /></a>&nbsp;
-<a href='javascript:void(0);' onclick='javascript:getManyToOneMappingHTML();'><img border='0' src='images/addmany1.png' /></a><br/>
+<a href='javascript:void(0);' onclick='javascript:getManyToOneMappingHTML();'><img border='0' src='images/addmany1.png' /></a>&nbsp;
+<a href='javascript:void(0);' onclick='javascript:getPrimaryForeignRelationshipHTML();'><img border='0' src='images/primaryforeignkey.png' /></a>&nbsp;
+<a href='javascript:void(0);' onclick='javascript:getMultiValuedHTML();'><img border='0' src='images/multi.png' /></a><br/>
 
 <input type='hidden' id='guidList' name='guidList'></input>
 <input type='submit' value='Process'></input>

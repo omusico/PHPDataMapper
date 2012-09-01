@@ -3,8 +3,11 @@
 		//a class to hold the processing information
 		public $ProcessColumn;
 
-		//the name of the 'landing' table
+		//the name of the 'landing' table when mapping to a database
 		public $tableName;
+
+		//The name of the 'landing' table column when mapping to a database
+		public $columnName;
 
 		//the number of the 'landing' column, starting from 0
 		public $landingColumnNumber;
@@ -13,11 +16,16 @@
 		public $memberDestination;
 
 		public $outputToDataStructure = false;
+
+		public $outputToDataBase = false;
+
+		public $isDistinct = false;
 	}
 
 	class ManyToOne{
 		public $ProcessColumns = array();
 		public $tableName;
+		public $columnName;
 		public $landingColumnNumber;
 		public $constructedString;
 		
@@ -25,6 +33,14 @@
 		public $memberDestination;
 
 		public $outputToDataStructure = false;
+
+		public $outputToDataBase = false;
+	}
+
+	class Multi{
+		public $tableName;
+		public $columnName;
+		public $processColumnMutli;
 	}
 
 	class ProcessColumn{
@@ -43,6 +59,19 @@
 			$this->subStringStart = $subStringStart;
 			$this->subStringLength = $subStringLength;
 			$this->customEvaluation = $customEvaluation;
+		}
+	}
+
+	class ProcessColumnMulti{
+		public $columnNumber;
+		public $splitCharacter;
+		public $hasChildren;
+
+		function __construct($columnNumber, $splitCharacter, $hasChildren)
+		{
+			$this->columnNumber = $columnNumber;
+			$this->splitCharacter = $splitCharacter;
+			$this->hasChildren = $hasChildren;
 		}
 	}
 ?>

@@ -45,7 +45,23 @@ function showOptionsManyToOne(dropdown, number){
 		
 	}
 }
+function deleteMultiValue(guid){
+	var inputColNum = document.getElementById('inputColumnNumber_'+guid);
+	var inputHasChildren = document.getElementById('inputHasChildren_'+guid);
+	var inputSrcChar = document.getElementById('srcCharSplit_'+guid);
 
+	var table = document.getElementById('MultiValueTable_'+guid);
+	
+	inputColNum.disabled = true;
+	inputHasChildren.disabled = true;
+	if(inputSrcChar != null){
+		inputSrcChar.disabled = true;	
+	}	
+	
+	table.style.display = 'none'
+
+	DeleteFromGuidList(guid);
+}
 function deleteOneToOne(guid){
 	var inputColNum = document.getElementById('inputColumnNumber_'+guid);
 	var inputFn = document.getElementById('inputFunction_'+guid);
@@ -99,7 +115,17 @@ function deleteManyToOne(guid){
 
 	DeleteFromGuidList(guid);
 }
+function deletePrimaryForeign(guid){
+	var table = document.getElementById('PrimaryForeignTable_'+guid);
+	var outputDBTable = document.getElementById('outputDataBaseTable_'+guid);
+	var inputDBTable = document.getElementById('inputDataBaseTable_'+guid);
+	outputDBTable.disabled = true;
+	inputDBTable.disabled = true;
 
+	table.style.display = 'none'
+
+	DeleteFromGuidList(guid);
+}
 function DeleteFromGuidList(guid){
 	var guidList = document.getElementById('guidList').value;
 	var vals = guidList.split(';');
@@ -136,13 +162,344 @@ function SelectOutput(dropdownlist){
 	}
 }
 
+function getPrimaryForeignRelationshipHTML(){
+	var mappingDestination = document.getElementById("MappingType").value;
+	var databaseTableInformation = document.getElementById("TableInformation").value;
+
+	if(mappingDestination != "ToDataBase"){
+		//don't do it
+		alert("This mapping can only be used when mapping to a database!");
+		return false;
+	}
+	if((mappingDestination == "ToDataBase") && (databaseTableInformation == "")){
+		alert("You must retrieve database information before defining mappings!");
+		return false;
+	}
+
+	var guid = guidGenerator();
+	var topLevel = databaseTableInformation.split('|');
+	document.getElementById("guidList").value += guid+",PKFK;";
+
+	//Controls for Database Table output
+	var dataBaseDestDropDown = document.createElement('select');
+	dataBaseDestDropDown.setAttribute('id','outputDataBaseTable_'+guid);
+	dataBaseDestDropDown.setAttribute('name','outputDataBaseTable_'+guid);
+
+	var dataBaseSrcDropDown = document.createElement('select');
+	dataBaseSrcDropDown.setAttribute('id','inputDataBaseTable_'+guid);
+	dataBaseSrcDropDown.setAttribute('name','inputDataBaseTable_'+guid);
+
+	//Interpret the table information and construct HTML controls
+	for(var p=0; p<topLevel.length; p++){
+		var tableName = topLevel[p].split(';')[0];
+		var currColInfo = topLevel[p].split(';')[1].split(',');
+		for(var q=0; q<currColInfo.length; q++){
+			var colName = currColInfo[q].split(':')[0];
+			var isPrimary = currColInfo[q].split(':')[1];
+
+			if(isPrimary == "0"){
+				var currCol = document.createElement('option');
+    			currCol.setAttribute('value', tableName+"->"+colName);
+    			currCol.innerHTML = tableName+"->"+colName;
+    			dataBaseDestDropDown.appendChild(currCol);
+    		}
+		}
+	}	
+
+	for(var p=0; p<topLevel.length; p++){
+		var tableName = topLevel[p].split(';')[0];
+		var currColInfo = topLevel[p].split(';')[1].split(',');
+		for(var q=0; q<currColInfo.length; q++){
+			var colName = currColInfo[q].split(':')[0];
+			var isPrimary = currColInfo[q].split(':')[1];
+
+			if(isPrimary == "1"){
+				var currCol = document.createElement('option');
+    			currCol.setAttribute('value', tableName+"->"+colName);
+    			currCol.innerHTML = tableName+"->"+colName;
+    			dataBaseSrcDropDown.appendChild(currCol);
+    		}
+		}
+	}
+
+    var FKeyText = document.createElement('div');
+    FKeyText.innerHTML = "Foreign Key:";
+
+    var PKeyText = document.createElement('div');
+    PKeyText.innerHTML = "Primary Key:";
+ 
+	//Create the HTML Elements and append them as children
+	var table = document.createElement('table');
+	table.setAttribute('id','PrimaryForeignTable_'+guid);
+	table.setAttribute('width','800');
+	table.setAttribute('border','1');
+
+	var row1 = document.createElement('tr');
+
+	var cell1 = document.createElement('td');
+	cell1.setAttribute('style','border:0px');
+	cell1.setAttribute('valign','top');
+
+	var cell2 = document.createElement('td');
+	cell2.setAttribute('style','border:0px');
+	cell2.setAttribute('valign','center');
+
+	var cell2image = document.createElement('img');
+	cell2image.setAttribute('src','images/arrow_pkfk.png');
+
+	var cell3 = document.createElement('td');
+	cell3.setAttribute('style','border:0px;');
+	cell3.setAttribute('valign','top');
+
+	var cell4 = document.createElement('td');
+	cell4.setAttribute('style','border:0px;');
+	cell4.setAttribute('valign','top');
+	cell4.setAttribute('align','right');
+
+	var cell4AHref = document.createElement('a');
+	cell4AHref.setAttribute('href','javascript:void(0);');
+	cell4AHref.setAttribute('onclick', 'javascript:deletePrimaryForeign("'+guid+'")');
+
+	var cell4Image = document.createElement('img');
+	cell4Image.setAttribute('src', 'images/delete.png');
+	cell4Image.setAttribute('border','0');
+
+	var linebreak = document.createElement('br');
+
+	//compose the HTML document elements using appendChild.
+	table.appendChild(row1);
+		row1.appendChild(cell1);
+			cell1.appendChild(PKeyText);
+			cell1.appendChild(dataBaseSrcDropDown);
+		row1.appendChild(cell2);
+			cell2.appendChild(cell2image);
+		row1.appendChild(cell3);
+				cell3.appendChild(FKeyText);
+				cell3.appendChild(dataBaseDestDropDown);
+		row1.appendChild(cell4);
+			cell4.appendChild(cell4AHref);
+				cell4AHref.appendChild(cell4Image);
+
+	document.getElementById("mappings").appendChild(table);
+}
+
+function MultiValueXMLHasChildren(guid){
+	var container = document.getElementById('xmlSplitCharContainer_'+guid);
+	var hasChildren = document.getElementById('inputHasChildren_'+guid).value;
+
+	var srcCharSplitLabel = document.createElement('div');
+	srcCharSplitLabel.innerHTML = "Split character:";
+
+	var srcCharSplitInput = document.createElement('input');
+	srcCharSplitInput.setAttribute('type','text');
+	srcCharSplitInput.setAttribute('size','3');
+	srcCharSplitInput.setAttribute('id','srcCharSplit_'+guid);
+	srcCharSplitInput.setAttribute('name','srcCharSplit_'+guid);
+
+	if(hasChildren == "yes"){
+		//clear the container
+		container.innerHTML = "";
+	}else{
+		container.appendChild(srcCharSplitLabel);
+		container.appendChild(srcCharSplitInput);
+	}
+}
+
+function getMultiValuedHTML(){
+	var mappingDestination = document.getElementById("MappingType").value;
+	var databaseTableInformation = document.getElementById("TableInformation").value;
+	var fileType = document.getElementById('InputFileExt').value;
+
+	if(mappingDestination != "ToDataBase"){
+		//don't do it
+		alert("This mapping can only be used when mapping to a database!");
+		return false;
+	}
+	if((mappingDestination == "ToDataBase") && (databaseTableInformation == "")){
+		alert("You must retrieve database information before defining mappings!");
+		return false;
+	}
+
+	var guid = guidGenerator();
+	var topLevel = databaseTableInformation.split('|');
+	document.getElementById("guidList").value += guid+",multi;";
+
+	//Controls for Database Table output
+	var dataBaseDestDropDown = document.createElement('select');
+	dataBaseDestDropDown.setAttribute('id','outputDataBaseTable_'+guid);
+	dataBaseDestDropDown.setAttribute('name','outputDataBaseTable_'+guid);
+
+	var dataStructureText = document.createElement('div');
+    dataStructureText.innerHTML = "Output member:";
+
+	//Interpret the table information and construct HTML controls
+	for(var p=0; p<topLevel.length; p++){
+		var tableName = topLevel[p].split(';')[0];
+		var currColInfo = topLevel[p].split(';')[1].split(',');
+		for(var q=0; q<currColInfo.length; q++){
+			var colName = currColInfo[q].split(':')[0];
+			var isPrimary = currColInfo[q].split(':')[1];
+
+			if(isPrimary == "0"){
+				var currCol = document.createElement('option');
+    			currCol.setAttribute('value', tableName+"->"+colName);
+    			currCol.innerHTML = tableName+"->"+colName;
+    			dataBaseDestDropDown.appendChild(currCol);
+    		}
+		}
+	}
+ 
+	//Create the source HTML elements
+	var srcColLabel = document.createElement('div');
+	srcColLabel.innerHTML = "Input column number:"
+
+	var srcColInput = document.createElement('input');
+	srcColInput.setAttribute('type','text');
+	srcColInput.setAttribute('size','3');
+	srcColInput.setAttribute('id','inputColumnNumber_'+guid);
+	srcColInput.setAttribute('name','inputColumnNumber_'+guid);
+
+	var srcHasChildrenLabel = document.createElement('div');
+	srcHasChildrenLabel.innerHTML = "Has children?";
+
+	var srcHasChildrenDropDown = document.createElement('select');
+	srcHasChildrenDropDown.setAttribute('id','inputHasChildren_'+guid);
+	srcHasChildrenDropDown.setAttribute('name','inputHasChildren_'+guid);
+	srcHasChildrenDropDown.setAttribute("onchange","MultiValueXMLHasChildren('"+guid+"');");
+
+	var srcHasChildrenDropDownYes = document.createElement('option');
+	srcHasChildrenDropDownYes.setAttribute("value","yes");
+	srcHasChildrenDropDownYes.innerHTML = "Yes";
+	
+	var srcHasChildrenDropDownNo = document.createElement('option');
+	srcHasChildrenDropDownNo.setAttribute("value","no");
+	srcHasChildrenDropDownNo.innerHTML = "No";
+
+	srcHasChildrenDropDown.appendChild(srcHasChildrenDropDownYes);
+	srcHasChildrenDropDown.appendChild(srcHasChildrenDropDownNo);
+
+	var xmlSplitCharContainer = document.createElement('div');
+	xmlSplitCharContainer.setAttribute('id','xmlSplitCharContainer_'+guid);
+	xmlSplitCharContainer.setAttribute('name','xmlSplitCharContainer_'+guid);
+
+	var srcCharSplitLabel = document.createElement('div');
+	srcCharSplitLabel.innerHTML = "Split character:";
+
+	var srcCharSplitInput = document.createElement('input');
+	srcCharSplitInput.setAttribute('type','text');
+	srcCharSplitInput.setAttribute('size','3');
+	srcCharSplitInput.setAttribute('id','srcCharSplit_'+guid);
+	srcCharSplitInput.setAttribute('name','srcCharSplit_'+guid);
+
+	//Create the HTML Elements and append them as children
+	var table = document.createElement('table');
+	table.setAttribute('id','MultiValueTable_'+guid);
+	table.setAttribute('width','800');
+	table.setAttribute('border','1');
+
+	var row1 = document.createElement('tr');
+
+	var cell1 = document.createElement('td');
+	cell1.setAttribute('style','border:0px');
+	cell1.setAttribute('valign','top');
+
+	var cell2 = document.createElement('td');
+	cell2.setAttribute('style','border:0px');
+	cell2.setAttribute('valign','center');
+
+	var cell2image = document.createElement('img');
+	cell2image.setAttribute('src','images/arrow_multi.png');
+
+	var cell3 = document.createElement('td');
+	cell3.setAttribute('style','border:0px;');
+	cell3.setAttribute('valign','top');
+
+	var cell4 = document.createElement('td');
+	cell4.setAttribute('style','border:0px;');
+	cell4.setAttribute('valign','top');
+	cell4.setAttribute('align','right');
+
+	var cell4AHref = document.createElement('a');
+	cell4AHref.setAttribute('href','javascript:void(0);');
+	cell4AHref.setAttribute('onclick', 'javascript:deleteMultiValue("'+guid+'")');
+
+	var cell4Image = document.createElement('img');
+	cell4Image.setAttribute('src', 'images/delete.png');
+	cell4Image.setAttribute('border','0');
+
+	var linebreak = document.createElement('br');
+
+	//compose the HTML document elements using appendChild.
+	table.appendChild(row1);
+		row1.appendChild(cell1);
+			if((fileType == "csv")||(fileType == "xls")){
+				cell1.appendChild(srcColLabel);
+				cell1.appendChild(srcColInput);
+				cell1.appendChild(srcCharSplitLabel);
+				cell1.appendChild(srcCharSplitInput);
+			}else if (fileType == "xml"){
+				cell1.appendChild(srcColLabel);
+				cell1.appendChild(srcColInput);
+				cell1.appendChild(srcHasChildrenLabel);
+				cell1.appendChild(srcHasChildrenDropDown);
+				cell1.appendChild(xmlSplitCharContainer);
+			}
+		row1.appendChild(cell2);
+			cell2.appendChild(cell2image);
+		row1.appendChild(cell3);
+				cell3.appendChild(dataStructureText);
+				cell3.appendChild(dataBaseDestDropDown);
+		row1.appendChild(cell4);
+			cell4.appendChild(cell4AHref);
+				cell4AHref.appendChild(cell4Image);
+
+	document.getElementById("mappings").appendChild(table);
+}
+
 function getOneToOneMappingHTML(){
 	var guid = guidGenerator();
-
+	var databaseTableInformation = document.getElementById("TableInformation").value;
+	var topLevel = databaseTableInformation.split('|');
 	document.getElementById("guidList").value += guid+",1:1;";
 
 	var mappingDestination = document.getElementById("MappingType").value;
 
+	//Controls for Database Table output
+	var distinctCB = document.createElement('input');
+	distinctCB.setAttribute('type','checkbox');
+	distinctCB.setAttribute('id','outDatabaseTableDistinct_'+guid);
+	distinctCB.setAttribute('name','outDatabaseTableDistinct_'+guid);
+
+	var distinctLabel = document.createElement('div');
+	distinctLabel.innerHTML = "Distinct?";
+
+	var dataBaseDestDropDown = document.createElement('select');
+	dataBaseDestDropDown.setAttribute('id','outputDataBaseTable_'+guid);
+	dataBaseDestDropDown.setAttribute('name','outputDataBaseTable_'+guid);
+
+	if((mappingDestination == "ToDataBase") && (databaseTableInformation == "")){
+		alert("You must retrieve database information before defining mappings!");
+		return false;
+	}
+
+	//Interpret the table information and construct HTML controls
+	for(var p=0; p<topLevel.length; p++){
+		var tableName = topLevel[p].split(';')[0];
+		var currColInfo = topLevel[p].split(';')[1].split(',');
+		for(var q=0; q<currColInfo.length; q++){
+			var colName = currColInfo[q].split(':')[0];
+			var isPrimary = currColInfo[q].split(':')[1];
+
+			if(isPrimary == "0"){
+				var currCol = document.createElement('option');
+    			currCol.setAttribute('value', tableName+"->"+colName);
+    			currCol.innerHTML = tableName+"->"+colName;
+    			dataBaseDestDropDown.appendChild(currCol);
+    		}
+		}
+	}
+
+	//Controls for Datastructure output
 	var dataStructureDestDropDown = document.createElement('select');
 	dataStructureDestDropDown.setAttribute('id','outputDataMember_'+guid);
 	dataStructureDestDropDown.setAttribute('name','outputDataMember_'+guid);
@@ -285,7 +642,7 @@ function getOneToOneMappingHTML(){
 	cell2.setAttribute('valign','center');
 
 	var cell2image = document.createElement('img');
-	cell2image.setAttribute('src','images/arrow.png');
+	cell2image.setAttribute('src','images/arrow_11.png');
 
 	var cell3 = document.createElement('td');
 	cell3.setAttribute('style','border:0px;');
@@ -354,7 +711,11 @@ function getOneToOneMappingHTML(){
 				dataStructureDestDropDown.appendChild(dataStructureDestOpt6);
 				dataStructureDestDropDown.appendChild(dataStructureDestOpt7);
 				dataStructureDestDropDown.appendChild(dataStructureDestOpt8);
-
+			}else if(mappingDestination == "ToDataBase"){
+				cell3.appendChild(dataStructureText);
+				cell3.appendChild(dataBaseDestDropDown);
+				cell3.appendChild(distinctLabel);
+				cell3.appendChild(distinctCB);
 			}else{
 				cell3.appendChild(cell3DivElement);
 				cell3.appendChild(cell3InputOutputCol);	
@@ -368,11 +729,46 @@ function getOneToOneMappingHTML(){
 
 function getManyToOneMappingHTML(){
 	var guid = guidGenerator();
-
+	var databaseTableInformation = document.getElementById("TableInformation").value;
+	var topLevel = databaseTableInformation.split('|');
 	document.getElementById("guidList").value += guid+",many:1;";
 
 	var mappingDestination = document.getElementById("MappingType").value;
 
+
+	if((mappingDestination == "ToDataBase") && (databaseTableInformation == "")){
+		alert("You must retrieve database information before defining mappings!");
+		return false;
+	}
+
+	//Controls for Database Table output
+	var dataBaseDestDropDown = document.createElement('select');
+	dataBaseDestDropDown.setAttribute('id','outputDataBaseTable_'+guid);
+	dataBaseDestDropDown.setAttribute('name','outputDataBaseTable_'+guid);
+
+	if((mappingDestination == "ToDataBase") && (databaseTableInformation == "")){
+		alert("You must retrieve database information before defining mappings!");
+		return false;
+	}
+
+	//Interpret the table information and construct HTML controls
+	for(var p=0; p<topLevel.length; p++){
+		var tableName = topLevel[p].split(';')[0];
+		var currColInfo = topLevel[p].split(';')[1].split(',');
+		for(var q=0; q<currColInfo.length; q++){
+			var colName = currColInfo[q].split(':')[0];
+			var isPrimary = currColInfo[q].split(':')[1];
+
+			if(isPrimary == "0"){
+				var currCol = document.createElement('option');
+    			currCol.setAttribute('value', tableName+"->"+colName);
+    			currCol.innerHTML = tableName+"->"+colName;
+    			dataBaseDestDropDown.appendChild(currCol);
+    		}
+		}
+	}
+
+	//Controls for datastructure output
 	var dataStructureDestDropDown = document.createElement('select');
 	dataStructureDestDropDown.setAttribute('id','outputDataMember_'+guid);
 	dataStructureDestDropDown.setAttribute('name','outputDataMember_'+guid);
@@ -530,7 +926,7 @@ function getManyToOneMappingHTML(){
 	cell2.setAttribute('valign','center');
 
 	var cell2image = document.createElement('img');
-	cell2image.setAttribute('src','images/arrow.png');
+	cell2image.setAttribute('src','images/arrow_many1.png');
 
 	var cell3 = document.createElement('td');
 	cell3.setAttribute('style','border:0px;');
@@ -613,7 +1009,9 @@ function getManyToOneMappingHTML(){
 				dataStructureDestDropDown.appendChild(dataStructureDestOpt6);
 				dataStructureDestDropDown.appendChild(dataStructureDestOpt7);
 				dataStructureDestDropDown.appendChild(dataStructureDestOpt8);
-
+			}else if(mappingDestination == "ToDataBase"){
+				cell3.appendChild(dataStructureText);
+				cell3.appendChild(dataBaseDestDropDown);
 			}else{
 				cell3.appendChild(cell3DivElement);
 				cell3.appendChild(cell3InputOutputCol);
