@@ -5,8 +5,9 @@
         font-family:arial;
     }
 </style>
-<script type='text/javascript' src='dynamicForm.js'>
-</script>
+<script type='text/javascript' src='dynamicForm.js'></script>
+<script type='text/javascript' src='ajaxLibrary.js'></script>
+<script type='text/javascript' src='jquery1_7_2.js'></script>
 </head>
 <body>
 
@@ -29,6 +30,7 @@
             <select onchange='javascript:SelectOutput(this);' id='MappingType' name='MappingType'>
                 <option value='ToOutputDataFile'>Map to destination file</option>
                 <option value='ToDataStructure'>Map to data structure</option>
+				<option value='ToDataBase'>Map to data base</option>
             </select>
         </td>
     </tr>
@@ -43,6 +45,28 @@
                 <option value='xls'>*.xls</option>
             </select>
         </td>
+    </tr>
+	<tr id='outputdatabaseform' name='outputdatabaseform' style='display:none;'>
+        <td colspan='2'>
+			Server address: <input type='text' name='DataBaseServerAddress' id='DataBaseServerAddress' value=''></input><br/>
+			Username: <input type='text' name='DataBaseUserName' id='DataBaseUserName' value=''></input><br/>
+			Password: <input type='password' name='DataBasePassword' id='DataBasePassword' value=''></input><br/>
+			<a href='javascript:void(0);' onclick='ShowLoadingListOfDataBases();RetrieveListOfDataBases();' >Retrieve list of databases</a>
+			<div id='ListOfDataBasesLoader' name='ListOfDataBasesLoader' style='display:none;'>
+				<img src='images/loader.gif' >
+			</div>
+			<br/>
+			<div id='ListOfDatabaseNamesContainer' name='ListOfDatabaseNamesContainer' style='display:none;'>	
+				Select Database: 	<select id='ListOfDatabaseNames' name='ListOfDatabaseNames' >
+									</select><br/>
+				<a href='javascript:void(0);' onclick='RetrieveDataBaseInformation();'>Retrieve database information for mappings</a>
+				<div id='DataBaseInfoLoader' name='DataBaseInfoLoader' style='display:none;'>
+					<img src='images/loader.gif' >
+				</div>
+				<input type='hidden' value='' id='TableInformation' name='TableInformation' />
+				<div id='DBTableInfoContainer' name='DBTableInfoContainer' ></div>
+ 			</div>
+		</td>
     </tr>
     <tr>
     </tr>

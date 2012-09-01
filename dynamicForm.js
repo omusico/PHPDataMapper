@@ -126,8 +126,13 @@ function DeleteFromGuidList(guid){
 function SelectOutput(dropdownlist){
 	if(dropdownlist.value == "ToOutputDataFile"){
 		document.getElementById('outputdatafileform').style.display = '';
+		document.getElementById('outputdatabaseform').style.display = 'none';
 	}else if(dropdownlist.value == "ToDataStructure"){
 		document.getElementById('outputdatafileform').style.display = 'none';
+		document.getElementById('outputdatabaseform').style.display = 'none';
+	}else if(dropdownlist.value == "ToDataBase"){
+		document.getElementById('outputdatafileform').style.display = 'none';
+		document.getElementById('outputdatabaseform').style.display = '';
 	}
 }
 
