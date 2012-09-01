@@ -55,12 +55,14 @@ class MappingProcessor{
 		// 	store the result value in the global data class
 
 		$rowCount = count($this->dataFileClass->rows);
+		
+		
 
-		for($j=1; $j<=$rowCount; $j++){
+		for($j=0; $j<$rowCount; $j++){
 
 			$landingColumnNumber = $mapping->landingColumnNumber;
 			$columnNumber = $mapping->ProcessColumn->columnNumber;
-
+			
 			$existingColumnValue = $this->dataFileClass->rows[$j]->values[$columnNumber];
 
 			switch($mapping->ProcessColumn->fnction){
@@ -110,7 +112,7 @@ class MappingProcessor{
 
 		$rowCount = count($this->dataFileClass->rows);
 
-		for($j=1; $j<=$rowCount; $j++)
+		for($j=0; $j<=$rowCount; $j++)
 		{
 			$landingColumnNumber = $mapping->landingColumnNumber;
 
@@ -197,8 +199,9 @@ class MappingProcessor{
 
 			
 		}else if($this->outputFileType == "csv"){
-			$csvdw = new CSVDataWriter($dataFile);
-			
+			echo "writer";
+			$csvdw = new CSVDataWriter($this->outputFileName, $this->outputDataFileClass);
+			$csvdw->writeToFile();
 
 		}else if($this->outputFileType == "txt"){
 			echo "writer";

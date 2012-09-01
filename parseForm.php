@@ -71,9 +71,10 @@
         }
 
 
-        $processor->writeDataToFile();
+        
     }
     
+    $processor->writeDataToFile();
 ?>
 </body>
 </html>

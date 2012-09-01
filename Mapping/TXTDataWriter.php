@@ -20,8 +20,8 @@
 			$rowValue = "";
 
 			//enumerate the dataClass and save data into text file with file name
-			for($r=1; $r<=count($this->dataClass->rows); $r++){
-				
+			for($r=0; $r<count($this->dataClass->rows); $r++){
+				$rowValue = "";
 				for($s=0; $s<count($this->dataClass->rows[$r]->values); $s++)
 				{
 					$rowValue = $rowValue.$this->dataClass->rows[$r]->values[$s]."|";
@@ -30,7 +30,7 @@
 				$rowValue = rtrim($rowValue, "|");
 
 				//add new line
-				$rowValue = $rowValue."\r\n";
+				//$rowValue = $rowValue."\r\n";
 
 				fwrite($this->handle, $rowValue);
 			}

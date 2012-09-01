@@ -18,7 +18,7 @@
 			$numberCols = count($cols);
 
 			//put it into our generic DataClass
-			for($i=1; $i<count($lines); $i++)
+			for($i=0; $i<count($lines); $i++)
 			{
 				$thisRowsColumns = split("\|", $lines[$i]);
 
