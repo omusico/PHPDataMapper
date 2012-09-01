@@ -36,7 +36,7 @@ function getManyToOneMappingHTML(){
 					"<tr>"+
 						"<td valign='top'>"+
 							"<div id='ListOfMappings_"+guid+"'>"+
-							"<input type='hidden' id='numMappings_"+guid+"' value='1' ></input>"+
+							"<input type='hidden' id='numMappings_"+guid+"' name='numMappings_"+guid+"' value='1' ></input>"+
 							"<b>1</b><br/>"+
 							"Input column number: <input id='inputColumnNumber_1_"+guid+"' name='inputColumnNumber_1_"+guid+"' type='text'></input><br/>"+
 							"<select id='inputFunction_1_"+guid+"' name='inputFunction_1_"+guid+"' onchange='javascript:showOptions(this);'>"+
@@ -44,10 +44,10 @@ function getManyToOneMappingHTML(){
 								"<option value='char'>character</option>"+
 								"<option value='substr'>sub string</option>"+
 							"</select><br/>"+
-							"character <input type='text' id='inputCharNum_"+guid+"' name='inputCharNum_"+guid+"'></input><br/>"+
+							"character <input type='text' id='inputCharNum_1_"+guid+"' name='inputCharNum_1_"+guid+"'></input><br/>"+
 							"substring<br/>"+
-							"start <input type='text' id='inputSubStart_"+guid+"' name='inputSubStart_"+guid+"'></input><br/>"+
-							"end <input type='text' id='inputSubEnd_"+guid+"' name='inputSubEnd_"+guid+"'></input>"+
+							"start <input type='text' id='inputSubStart_1_"+guid+"' name='inputSubStart_1_"+guid+"'></input><br/>"+
+							"end <input type='text' id='inputSubEnd_1_"+guid+"' name='inputSubEnd_1_"+guid+"'></input>"+
 							"</div>"+
 							"<div id='AddAnotherLink_"+guid+"'>"+
 							"</div>"+
@@ -81,10 +81,10 @@ function AddMapping(guid, numMappings){
 					"<option value='char'>character</option>"+
 					"<option value='substr'>sub string</option>"+
 				"</select><br/>"+
-				"character <input type='text' id='inputCharNum_"+guid+"' name='inputCharNum_"+guid+"'></input><br/>"+
+				"character <input type='text' id='inputCharNum_"+(currentNumberMappings+1)+"_"+guid+"' name='inputCharNum_"+(currentNumberMappings+1)+"_"+guid+"'></input><br/>"+
 				"substring<br/>"+
-				"start <input type='text' id='inputSubStart_"+guid+"' name='inputSubStart_"+guid+"'></input><br/>"+
-				"end <input type='text' id='inputSubEnd_"+guid+"' name='inputSubEnd_"+guid+"'></input>";
+				"start <input type='text' id='inputSubStart_"+(currentNumberMappings+1)+"_"+guid+"' name='inputSubStart_"+(currentNumberMappings+1)+"_"+guid+"'></input><br/>"+
+				"end <input type='text' id='inputSubEnd_"+(currentNumberMappings+1)+"_"+guid+"' name='inputSubEnd_"+(currentNumberMappings+1)+"_"+guid+"'></input>";
 
 	mappingsList.innerHTML += html;
 }

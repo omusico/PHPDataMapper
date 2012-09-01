@@ -99,27 +99,27 @@ class MappingProcessor{
 			$landingColumnNumber = $mapping->landingColumnNumber;
 
 			//for each of the ProcessColumns in the Mapping
-			$numProcessColumns = size($mapping->ProcessColumns);
+			$numProcessColumns = count($mapping->ProcessColumns);
 
 			$allValues = array();
 
 			//Put each of the values into the ordered array
 			for($k=0; $k<$numProcessColumns; $k++){
-				$newValue;
+				$newValue = "";
 				$columnNumber = $mapping->ProcessColumns[$k]->columnNumber;
 				$existingColumnValue = $this->dataFileClass->rows[$j]->values[$columnNumber];
 
-				switch($mapping->ProcessColumn[$k]->fnction){
-					case "substring":
+				switch($mapping->ProcessColumns[$k]->fnction){
+					case "substr":
 						$newValue = substr( $existingColumnValue, 
-											$mapping->ProcessColumn->subStringStart, 
-											$mapping->ProcessColumn->subStringStart + $mapping->ProcessColumn->subStringEnd 
+											$mapping->ProcessColumns[$k]->subStringStart, 
+											$mapping->ProcessColumns[$k]->subStringStart + $mapping->ProcessColumns[$k]->subStringEnd 
 											);
 						break;
 					case "character":
 						$newValue = substr( $existingColumnValue, 
-											$mapping->ProcessColumn->characterNumber, 
-											$mapping->ProcessColumn->characterNumber
+											$mapping->ProcessColumns[$k]->characterNumber, 
+											$mapping->ProcessColumns[$k]->characterNumber
 											);
 						break;
 				}
@@ -127,26 +127,33 @@ class MappingProcessor{
 				$allValues[$k] = $newValue;
 			}
 
+
+
 			//an array of strings
-			$concatChars = split("+", $mapping->constructedString);
+			$concatChars = split('\+', $mapping->constructedString);
 
-			$newFinalValue;
+			$newFinalValue="";
 
-			for($m=0; $m<size($concatChars); $m++){
+
+			for($m=0; $m<count($concatChars); $m++){
 				//if the first and last characters are " then this is part of the string.
+
+
+
 				if(
 					(substr($concatChars[$m], 0, 0) == "\"")|| 
 					(substr($concatChars[$m], (strlen($concatChars[$m]) - 1), (strlen($concatChars[$m]) - 1)) == "\""))
 				{
-					$newFinalValue += $concatChars[$m];
+					$newFinalValue .= ltrim(rtrim($concatChars[$m], '\"'), '\"');
 				}else{
 					//if not then it is one of the values obtained from the original column	
-					$newFinalValue += $allValues[$concatChars[$m]];
+					$newFinalValue .= $allValues[$concatChars[$m] - 1];
 				}				
 			}
 
 			//place the new final value into the specified area
-			$outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newValue;
+			$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newFinalValue;
+
 		}
 	}
 

@@ -21,7 +21,7 @@
 
     $processor = new MappingProcessor($_POST['InputFileExt'], $_POST['OutputFileExt'], $_POST['InputFileNameDir'], $_POST['OutputFileNameDir'], $outputData);
 
-    
+
     for($k=0; $k<count($guidsArray); $k++){
         $values = split(",",$guidsArray[$k]);   
 
@@ -51,20 +51,17 @@
 
                 for($r=0; $r<$mappingCount; $r++){
                     $pc = new ProcessColumn(
-                                                                $_POST["inputColumnNumber_".$values[0]], 
-                                                                $_POST["inputFunction_".$values[0]],
-                                                                $_POST["inputSplitBy_".$values[0]],
-                                                                $_POST["inputCharNum_".$values[0]],
-                                                                $_POST["inputSubStart_".$values[0]],
-                                                                $_POST["inputSubEnd_".$values[0]]
+                                                                $_POST["inputColumnNumber_".($r+1)."_".$values[0]], 
+                                                                $_POST["inputFunction_".($r+1)."_".$values[0]],
+                                                                $_POST["inputCharNum_".($r+1)."_".$values[0]],
+                                                                $_POST["inputSubStart_".($r+1)."_".$values[0]],
+                                                                $_POST["inputSubEnd_".($r+1)."_".$values[0]]
                                                             ); 
                     $mapping->ProcessColumns[$r] = $pc;
                 }
 
                 $mapping->landingColumnNumber = $_POST["outputColumnNumber_".$values[0]];
                 $mapping->constructedString = $_POST["outputColumnOrder_".$values[0]];
-
-                print_r($mapping);
 
                 $processor->ProcessManyToOne($mapping);
 

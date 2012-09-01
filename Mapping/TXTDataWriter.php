@@ -10,10 +10,7 @@
 
 			$this->handle = fopen($fileName, "w");
 			$this->dataClass = $dataClass;
-			
-			echo "<br/><br/>";
-			print_r($this->dataClass);
-			echo "<br/><br/>";
+
 
 		}
 
@@ -37,6 +34,7 @@
 
 				fwrite($this->handle, $rowValue);
 			}
+
 		}
 	}
 
