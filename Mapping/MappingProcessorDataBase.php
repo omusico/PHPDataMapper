@@ -123,7 +123,7 @@ class MappingProcessorDataBase{
 										);
 										
 					//$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newValue;
-					$this->table->rows[$j]->columns[$mapping->columnName] = $newValue;
+					$this->table->rows[$j]->columns[$mapping->columnName] =new TableCell(true, $newValue, $mapping->columnName); 
 
 					break;
 				case "char":
@@ -133,14 +133,14 @@ class MappingProcessorDataBase{
 										);
 					
 					//$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newValue;
-					$this->table->rows[$j]->columns[$mapping->columnName] = $newValue;
+					$this->table->rows[$j]->columns[$mapping->columnName] = new TableCell(true, $newValue, $mapping->columnName); 
 
 					break;
 				case "direct":
 					$newValue = $existingColumnValue;
 					
 					//$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newValue;
-					$this->table->rows[$j]->columns[$mapping->columnName] = $newValue;
+					$this->table->rows[$j]->columns[$mapping->columnName] = new TableCell(true, $newValue, $mapping->columnName); 
 
 					break;
 				case "eval":
@@ -154,7 +154,7 @@ class MappingProcessorDataBase{
 						
 					}else{
 						//$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newValue;
-						$this->table->rows[$j]->columns[$mapping->columnName] = $newValue;
+						$this->table->rows[$j]->columns[$mapping->columnName] = new TableCell(true, $newValue, $mapping->columnName); 
 					}
 
 					break;
@@ -244,13 +244,36 @@ class MappingProcessorDataBase{
 			
 			//place the new final value into the specified area
 			//$this->outputDataFileClass->rows[$j]->values[$landingColumnNumber] = $newFinalValue;
-			$this->table->rows[$j]->columns[$mapping->columnName] = $newFinalValue;
+			$this->table->rows[$j]->columns[$mapping->columnName] = new TableCell(true, $newFinalValue, $mapping->columnName);
 
 		}
 	}
 
 	public function processMulti($mapping){
+		$rowCount = count($this->dataFileClass->rows);
 
+		$runningCount = 0;
+
+		for($j=0; $j<$rowCount; $j++)
+		{
+			$columnNumber = $mapping->processColumnMutli->columnNumber;
+			$existingColumnValue = $this->dataFileClass->rows[$j]->values[$columnNumber];
+
+			$valuesSplit = explode($mapping->processColumnMutli->splitCharacter, $existingColumnValue);
+
+			$totalValCount = count($valuesSplit);
+			for($k=0; $k<$totalValCount; $k++){
+
+				$this->table->rows[$runningCount]->columns[$mapping->columnName] = new TableCell(true,  $valuesSplit[$k], $mapping->columnName);
+
+				//Load distinct value into fatherDistinctColumnValue if this mapping is for the CHILD table
+				if($this->tableType == "C"){
+					$this->table->rows[$runningCount]->fatherDistinctColumnValue = $this->dataFileClass->rows[$j]->values[$this->fatherDistinctColNum];
+				}
+
+				$runningCount++;
+			}
+		}
 	}
 
 	/*once finished mapping the table, use this function to finally insert it into the database
@@ -287,11 +310,16 @@ class MappingProcessorDataBase{
 			$table->colNames[] = $key;
 		}
 
+		//get the ds ready for mysql
+		$this->escapeStringTableDataStructure($table);
+
 		for($i=0; $i<count($table->rows); $i++){
 
 			$statement = "INSERT INTO `".$table->name."` (";
 			for($j=0; $j<count($table->colNames); $j++){
-				$statement .= $table->colNames[$j].", ";
+				if($table->rows[$i]->columns[$table->colNames[$j]]->process){
+					$statement .= $table->colNames[$j].", ";	
+				}
 			}
 			$statement = rtrim($statement, ", ");
 			$statement .= " ) VALUES (";
@@ -300,7 +328,9 @@ class MappingProcessorDataBase{
 			$currRow = $table->rows[$i];
 			
 			for($j=0; $j<count($table->colNames); $j++){
-				$statement .= "'".$currRow->columns[$table->colNames[$j]]."', ";
+				if($currRow->columns[$table->colNames[$j]]->process){
+					$statement .= "'".$currRow->columns[$table->colNames[$j]]->colValue."', ";
+				}
 			}
 			$statement = rtrim($statement, ", ");
 			$statement .= ");";
@@ -315,7 +345,7 @@ class MappingProcessorDataBase{
 	public function escapeStringTableDataStructure($ds){
 		foreach($ds->rows as $row){
 			foreach($row->columns as $key => $value){
-				$value = mysql_escape_string($value);
+				$value->colValue = mysql_escape_string($value->colValue);
 				$row->columns[$key] = $value;
 			}
 		}
@@ -351,7 +381,7 @@ class MappingProcessorDataBase{
 		for($i=0; $i<count($table->rows); $i++){
 
 			//check value of distinct column in TABLE
-			$distinctVal = $table->rows[$i]->columns[$distinctColName];
+			$distinctVal = $table->rows[$i]->columns[$distinctColName]->colValue;
 			//Get the value of the grandfather distinct column from the dataclass
 			$gfDistinct = "";
 			foreach($this->dataFileClass->rows as $currRow){
@@ -367,12 +397,16 @@ class MappingProcessorDataBase{
 			$pkGF = $row[0];
 
 			//insert the GF PK into the TABLE data structure
-			$table->rows[$i]->columns[$gfFKName] = $pkGF;
+			$table->rows[$i]->columns[$gfFKName]->colValue = $pkGF;
+			$table->rows[$i]->columns[$gfFKName]->process = true;
+			$table->rows[$i]->columns[$gfFKName]->colName = $gfFKName;
 
 
 			$statement = "INSERT INTO `".$table->name."` (";
 			for($j=0; $j<count($table->colNames); $j++){
-				$statement .= $table->colNames[$j].", ";
+				if($table->rows[$i]->columns[$table->colNames[$j]]->process){
+					$statement .= $table->colNames[$j].", ";
+				}
 			}
 			$statement = rtrim($statement, ", ");
 			$statement .= " ) VALUES (";
@@ -381,7 +415,9 @@ class MappingProcessorDataBase{
 			$currRow = $table->rows[$i];
 			
 			for($j=0; $j<count($table->colNames); $j++){
-				$statement .= "'".$currRow->columns[$table->colNames[$j]]."', ";
+				if($currRow->columns[$table->colNames[$j]]->process){
+					$statement .= "'".$currRow->columns[$table->colNames[$j]]->colValue."', ";
+				}
 			}
 			$statement = rtrim($statement, ", ");
 			$statement .= ");";
@@ -422,6 +458,7 @@ class MappingProcessorDataBase{
 
 			//check value of distinct column in TABLE
 			$distinctFatherVal = $table->rows[$i]->fatherDistinctColumnValue;
+
 			$fDistinct = "";
 			foreach($this->dataFileClass->rows as $currRow){
 				if($currRow->values[$fatherDistinctColNum] == $distinctFatherVal){
@@ -436,12 +473,16 @@ class MappingProcessorDataBase{
 			$pkF = $row[0];
 
 			//insert the F PK into the TABLE data structure
-			$table->rows[$i]->columns[$fFKName] = $pkF;
+			$table->rows[$i]->columns[$fFKName]->colValue = $pkF;
+			$table->rows[$i]->columns[$fFKName]->process = true;
+			$table->rows[$i]->columns[$fFKName]->colName = $fFKName;
 
 
 			$statement = "INSERT INTO `".$table->name."` (";
 			for($j=0; $j<count($table->colNames); $j++){
-				$statement .= $table->colNames[$j].", ";
+				if($table->rows[$i]->columns[$table->colNames[$j]]->process){
+					$statement .= $table->colNames[$j].", ";
+				}
 			}
 			$statement = rtrim($statement, ", ");
 			$statement .= " ) VALUES (";
@@ -450,7 +491,9 @@ class MappingProcessorDataBase{
 			$currRow = $table->rows[$i];
 			
 			for($j=0; $j<count($table->colNames); $j++){
-				$statement .= "'".$currRow->columns[$table->colNames[$j]]."', ";
+				if($currRow->columns[$table->colNames[$j]]->process){
+					$statement .= "'".$currRow->columns[$table->colNames[$j]]->colValue."', ";
+				}
 			}
 			$statement = rtrim($statement, ", ");
 			$statement .= ");";

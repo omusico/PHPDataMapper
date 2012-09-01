@@ -353,6 +353,7 @@ function getMultiValuedHTML(){
 	srcColInput.setAttribute('size','3');
 	srcColInput.setAttribute('id','inputColumnNumber_'+guid);
 	srcColInput.setAttribute('name','inputColumnNumber_'+guid);
+	srcColInput.setAttribute('onkeyup','javascript:queryAjaxLiveDataServiceForMulti("'+guid+'");')
 
 	var srcHasChildrenLabel = document.createElement('div');
 	srcHasChildrenLabel.innerHTML = "Has children?";
@@ -424,17 +425,55 @@ function getMultiValuedHTML(){
 
 	var linebreak = document.createElement('br');
 
+	//setup a table for dynamic data file column values
+	var colNumAndValTable = document.createElement("table");
+	colNumAndValTable.setAttribute("border","0");
+	var ValTableRow = document.createElement("tr");
+	var valTableCell1 = document.createElement("td");
+	var valTableCell2 = document.createElement("td");
+	var valTableCell3 = document.createElement("td");
+	//setup a div 
+	var valDiv = document.createElement("div");
+	valDiv.setAttribute("id", "DisplayValue_"+guid);
+	valDiv.setAttribute("name", "DisplayValue_"+guid);
+	valDiv.setAttribute("style","color:red;");
+
+	//ajax loading image
+	var ajaxImage = document.createElement('img');
+	ajaxImage.setAttribute('src','images/loader.gif');
+	ajaxImage.setAttribute('id','liveDataLoader_'+guid);
+	ajaxImage.setAttribute('name','liveDataLoader_'+guid);
+	ajaxImage.setAttribute('style','display:none;');
+
 	//compose the HTML document elements using appendChild.
 	table.appendChild(row1);
 		row1.appendChild(cell1);
 			if((fileType == "csv")||(fileType == "xls")){
 				cell1.appendChild(srcColLabel);
-				cell1.appendChild(srcColInput);
+
+				cell1.appendChild(colNumAndValTable);
+					colNumAndValTable.appendChild(ValTableRow);
+						ValTableRow.appendChild(valTableCell1);
+							valTableCell1.appendChild(srcColInput);
+						ValTableRow.appendChild(valTableCell2);
+							valTableCell2.appendChild(valDiv);
+						ValTableRow.appendChild(valTableCell3);
+							valTableCell3.appendChild(ajaxImage);
+
 				cell1.appendChild(srcCharSplitLabel);
 				cell1.appendChild(srcCharSplitInput);
 			}else if (fileType == "xml"){
 				cell1.appendChild(srcColLabel);
-				cell1.appendChild(srcColInput);
+
+				cell1.appendChild(colNumAndValTable);
+					colNumAndValTable.appendChild(ValTableRow);
+						ValTableRow.appendChild(valTableCell1);
+							valTableCell1.appendChild(srcColInput);
+						ValTableRow.appendChild(valTableCell2);
+							valTableCell2.appendChild(valDiv);
+						ValTableRow.appendChild(valTableCell3);
+							valTableCell3.appendChild(ajaxImage);
+
 				cell1.appendChild(srcHasChildrenLabel);
 				cell1.appendChild(srcHasChildrenDropDown);
 				cell1.appendChild(xmlSplitCharContainer);
@@ -1268,7 +1307,7 @@ function guidGenerator() {
 function getColumnValueFromFirstRowOfFile(columnNumber){
 	columnNumber = parseInt(columnNumber);
 	var firstRow = document.getElementById("FirstRowFromFile").value;
-	var values = firstRow.split(",");
+	var values = firstRow.split("<->");
 	var colCount = values.length;
 
 
@@ -1278,7 +1317,7 @@ function getColumnValueFromFirstRowOfFile(columnNumber){
 
 	//a comma seperated string that represents the first row
 	var firstRow = document.getElementById("FirstRowFromFile").value;
-	var values = firstRow.split(",");
+	var values = firstRow.split("<->");
 
 	return values[columnNumber];
 }

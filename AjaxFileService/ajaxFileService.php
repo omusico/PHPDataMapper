@@ -13,14 +13,14 @@
 
 		$ajaxResult = "";
 		foreach ($data->rows[0]->values as $key=>$value) {
-			$ajaxResult.=$value.",";
+			$ajaxResult.=$value."<->";
 		}
-		$ajaxResult = rtrim($ajaxResult, ",");
+		$ajaxResult = rtrim($ajaxResult, "<->");
 
 		//print the result for the ajax message
-		echo "SUCCESS;".$ajaxResult;
+		echo "SUCCESS<-->".$ajaxResult;
 	}catch(Exception $e){
-		echo "FAIL;There was an error loading that file.  Make sure the extension matches the filename and that the file specified exists.";
+		echo "FAIL<-->There was an error loading that file.  Make sure the extension matches the filename and that the file specified exists.";
 	}
 
 ?>

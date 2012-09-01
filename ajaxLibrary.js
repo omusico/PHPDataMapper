@@ -159,7 +159,7 @@ function PrepareInputFileForForm(){
 		  			filetype: document.getElementById("InputFileExt").value
 		   		}
 		}).done(function( msg ) {
-		  	var result = msg.split(";");
+		  	var result = msg.split("<-->");
 
 		  	var successOrFail = result[0];
 
@@ -188,6 +188,19 @@ function queryAjaxLiveDataServiceForNewColValue(guid){
 	var customEvalTxt = document.getElementById("inputCustomEval_"+guid).value;
 
 	doTheAjaxQueryLiveData(guid, fnc, inputColNum, inputColValue, chr, subStrStart, subStrLength, customEvalTxt, false, 0);
+}
+function queryAjaxLiveDataServiceForMulti(guid){
+	document.getElementById("DisplayValue_"+guid).value = "";
+
+	ShowDynFilePrevLoader(guid, false, 0);
+
+	//function, inputColNum, inputColValue, char, subStrStart, subStrLength, customEvalTxt\
+	var inputColNum = document.getElementById("inputColumnNumber_"+guid).value;
+	var fnc = "direct";
+	var inputColValue = getColumnValueFromFirstRowOfFile(inputColNum);
+	
+
+	doTheAjaxQueryLiveData(guid, fnc, inputColNum, inputColValue, "", "", "", "", false, 0);
 }
 function queryAjaxLiveDataServiceForNewColValueManyToOne(mappingNum, guid){
 	document.getElementById("DisplayValue_"+mappingNum+"_"+guid).value = "";

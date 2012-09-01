@@ -14,6 +14,7 @@ try{
     include "Mapping/MappingProcessorDataBase.php";
     include "Database/Table.php";
     include "Database/TableRow.php";
+    include "Database/TableCell.php";
     include "Database/Connection.php";
 
     $guids = $_POST['guidList'];
@@ -518,6 +519,21 @@ try{
 					$mapping->constructedString = $_POST["outputColumnOrder_".$guid];
 
 					$dataBaseProcessor->ProcessManyToOne($mapping);			
+					break;
+				case "multi":	
+						$columnNumber = $_POST["inputColumnNumber_".$guid];
+						$charSplit = $_POST["srcCharSplit_".$guid];
+						$hasChildren = $_POST["inputHasChildren_".$guid];
+
+						$mapping = new Multi($columnNumber, $charSplit, $hasChildren);
+						$tableAndColumn = explode("->", $_POST["outputDataBaseTable_".$guid]);
+						$landingColumnName = $tableAndColumn[1];
+						$landingTableName = $tableAndColumn[0];
+						$mapping->tableName = $landingTableName;
+						$mapping->columnName = $landingColumnName;
+
+						$dataBaseProcessor->ProcessMulti($mapping);
+
 					break;
 			}
 		}

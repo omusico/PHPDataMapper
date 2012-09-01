@@ -41,6 +41,10 @@
 		public $tableName;
 		public $columnName;
 		public $processColumnMutli;
+
+		function __construct($columnNumber, $splitCharacter, $hasChildren){
+			$this->processColumnMutli = new ProcessColumnMulti($columnNumber, $splitCharacter, $hasChildren);
+		}
 	}
 
 	class ProcessColumn{
